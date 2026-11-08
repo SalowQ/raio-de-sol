@@ -1,0 +1,18 @@
+.vazio {
+  padding: 2rem 1.5rem;
+  border-radius: var(--sol-raio);
+  background: var(--sol-papel);
+  box-shadow: var(--sol-sombra);
+}
+
+h1 {
+  margin: 0 0 0.5rem;
+  font-size: 1.75rem;
+}
+
+p {
+  margin: 0;
+  max-width: 40rem;
+  color: var(--sol-suave);
+  line-height: 1.5;
+}

@@ -1,0 +1,22 @@
+<section class="boas-vindas">
+  <div>
+    <p class="olho">Painel do Instituto</p>
+    <h1>Olá{{ nome() ? ', ' + nome() : '' }}</h1>
+    <p>Aqui você acompanha as crianças, os documentos e a presença.</p>
+  </div>
+  <nav class="atalhos" aria-label="Atalhos">
+    <a mat-flat-button color="primary" routerLink="/criancas">Pesquisar crianças</a>
+    <a mat-stroked-button routerLink="/criancas">Novo cadastro</a>
+  </nav>
+</section>
+<ul class="indicadores">
+  @for (item of indicadores; track item.rotulo) {
+    <li>
+      <article class="cartao" [class]="'cartao cartao-' + item.tom">
+        <h2>{{ item.rotulo }}</h2>
+        <p class="valor" aria-label="Ainda sem dados">—</p>
+      </article>
+    </li>
+  }
+</ul>
+<p class="nota">Os totais aparecem quando os cadastros estiverem disponíveis.</p>

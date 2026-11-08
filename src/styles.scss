@@ -1,0 +1,67 @@
+// Visual inspirado em painéis de educação: fundo quente, cartões coloridos e cantos macios.
+// A paleta é de interface. Não representa cores oficiais do Instituto.
+@use '@angular/material' as mat;
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+:root {
+  --sol-fundo: #fff4ea;
+  --sol-papel: #fffdfb;
+  --sol-tinta: #3b2a22;
+  --sol-suave: #6e564a;
+  --sol-acento: #c65d2e;
+  --sol-acento-suave: #ffe1cc;
+  --sol-damasco: #ffe0c2;
+  --sol-menta: #d7f3e3;
+  --sol-lilas: #e6defe;
+  --sol-manteiga: #fff0b8;
+  --sol-sombra: 0 12px 32px rgb(92 48 18 / 8%);
+  --sol-raio: 1.5rem;
+}
+
+html {
+  height: 100%;
+  @include mat.theme((
+    color: (
+      theme-type: light,
+      primary: mat.$orange-palette,
+      tertiary: mat.$yellow-palette,
+    ),
+    typography: ('Segoe UI', system-ui, sans-serif),
+    density: 0,
+  ));
+}
+
+body {
+  height: 100%;
+  margin: 0;
+  color-scheme: light;
+  background-color: var(--sol-fundo);
+  color: var(--sol-tinta);
+  font: var(--mat-sys-body-medium);
+  font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+app-root {
+  display: block;
+  height: 100%;
+}
+
+:focus-visible {
+  outline: 3px solid var(--sol-acento);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}

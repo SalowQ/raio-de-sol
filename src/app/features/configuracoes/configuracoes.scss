@@ -1,0 +1,31 @@
+h1 {
+  margin: 0 0 1rem;
+  font-size: 1.75rem;
+}
+
+mat-card {
+  border-radius: var(--sol-raio);
+  box-shadow: var(--sol-sombra);
+}
+
+dl {
+  display: grid;
+  grid-template-columns: 8rem 1fr;
+  gap: 0.75rem 1rem;
+  margin: 0.5rem 0 0;
+}
+
+dt {
+  color: var(--sol-suave);
+  font-weight: 700;
+}
+
+dd {
+  margin: 0;
+}
+
+@media (max-width: 599px) {
+  dl {
+    grid-template-columns: 1fr;
+  }
+}

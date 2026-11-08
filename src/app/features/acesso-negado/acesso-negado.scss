@@ -1,0 +1,23 @@
+:host {
+  display: block;
+  min-height: 100%;
+}
+
+.pagina {
+  min-height: 100%;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+  background: var(--sol-fundo);
+}
+
+.cartao {
+  width: min(100%, 28rem);
+  border-radius: var(--sol-raio);
+  box-shadow: var(--sol-sombra);
+}
+
+p {
+  margin-top: 1rem;
+  line-height: 1.5;
+}

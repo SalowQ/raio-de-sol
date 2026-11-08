@@ -1,0 +1,246 @@
+:host {
+  display: block;
+  height: 100%;
+  color: var(--sol-tinta);
+}
+
+.casca {
+  height: 100%;
+  background: var(--sol-fundo);
+  --mat-sidenav-container-background-color: transparent;
+}
+
+.pular {
+  position: absolute;
+  left: 0.5rem;
+  top: -3rem;
+  z-index: 3;
+  padding: 0.5rem 0.75rem;
+  border-radius: 999px;
+  background: var(--sol-acento);
+  color: #fff;
+  text-decoration: none;
+}
+
+.pular:focus {
+  top: 0.5rem;
+}
+
+mat-sidenav {
+  width: 17rem;
+  margin: 0.75rem 0 0.75rem 0.75rem;
+  border: none;
+  border-radius: var(--sol-raio);
+  background: var(--sol-papel);
+  box-shadow: var(--sol-sombra);
+  overflow: hidden;
+}
+
+:host ::ng-deep .mat-drawer-inner-container {
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+.marca-bloco {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 1.25rem 1rem 0.5rem;
+}
+
+.sol {
+  width: 2.6rem;
+  height: 2.6rem;
+  flex: none;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #ffe7a3, #f0a04b 55%, #e07a3d);
+  box-shadow: 0 0 0 6px var(--sol-acento-suave);
+}
+
+.marca,
+.submarca {
+  margin: 0;
+}
+
+.marca {
+  font-weight: 700;
+}
+
+.submarca {
+  color: var(--sol-suave);
+  font-size: 0.8rem;
+}
+
+:host ::ng-deep mat-nav-list.mat-mdc-nav-list {
+  padding: 0.25rem 0.85rem 1rem;
+}
+
+:host ::ng-deep a.mat-mdc-list-item {
+  width: 100%;
+  margin: 0.2rem 0;
+  border-radius: 999px;
+  box-sizing: border-box;
+  overflow: visible;
+}
+
+.icone {
+  display: inline-flex;
+  margin-right: 0.65rem;
+  vertical-align: middle;
+}
+
+.icone svg {
+  width: 1.15rem;
+  height: 1.15rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+a.ativo {
+  background: var(--sol-acento-suave);
+  color: var(--sol-tinta);
+  font-weight: 700;
+}
+
+mat-sidenav-content {
+  --recuo: 1.5rem;
+}
+
+.barra {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.75rem var(--recuo) 0;
+  padding: 0.7rem 1rem;
+  border-radius: var(--sol-raio);
+  background: var(--sol-papel);
+  box-shadow: var(--sol-sombra);
+}
+
+.seta {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: var(--sol-acento-suave);
+  color: var(--sol-tinta);
+  cursor: pointer;
+}
+
+.seta svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 220ms ease;
+}
+
+.marca-barra {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  min-width: 0;
+}
+
+.marca-textos {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+  min-width: 0;
+}
+
+.sol-barra {
+  width: 2.15rem;
+  height: 2.15rem;
+  box-shadow: 0 0 0 4px var(--sol-acento-suave);
+}
+
+.marca-entra {
+  animation: marca-entra 320ms ease 70ms both;
+}
+
+.marca-sai {
+  animation: marca-sai 180ms ease forwards;
+}
+
+@keyframes marca-entra {
+  from {
+    opacity: 0;
+    transform: translateX(-0.75rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes marca-sai {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+
+  to {
+    opacity: 0;
+    transform: translateX(-0.5rem);
+  }
+}
+
+.seta svg.fechada {
+  transform: rotate(180deg);
+}
+
+.espaco {
+  flex: 1;
+}
+
+.pessoa {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.avatar {
+  display: grid;
+  place-items: center;
+  width: 2.1rem;
+  height: 2.1rem;
+  border-radius: 50%;
+  background: var(--sol-lilas);
+  color: var(--sol-tinta);
+  font-weight: 700;
+}
+
+mat-sidenav-content {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.conteudo {
+  flex: 1;
+  width: 100%;
+  min-width: 0;
+  padding: 1.25rem var(--recuo) 2rem;
+}
+
+@media (max-width: 599px) {
+  mat-sidenav-content {
+    --recuo: 1rem;
+  }
+
+  .usuario,
+  .marca-barra .submarca {
+    display: none;
+  }
+}

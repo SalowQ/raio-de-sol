@@ -1,0 +1,85 @@
+.boas-vindas {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  padding: 1.5rem;
+  border-radius: var(--sol-raio);
+  background: var(--sol-papel);
+  box-shadow: var(--sol-sombra);
+}
+
+.olho {
+  margin: 0 0 0.25rem;
+  color: var(--sol-acento);
+  font-weight: 700;
+}
+
+h1 {
+  margin: 0 0 0.35rem;
+  font-size: 2rem;
+}
+
+.boas-vindas p:last-child {
+  margin: 0;
+  max-width: 34rem;
+  color: var(--sol-suave);
+  line-height: 1.5;
+}
+
+.atalhos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.indicadores {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cartao {
+  min-height: 9rem;
+  padding: 1.15rem 1.2rem;
+  border-radius: var(--sol-raio);
+}
+
+.cartao h2 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.valor {
+  margin: 1.25rem 0 0;
+  font-size: 2.4rem;
+  line-height: 1;
+}
+
+.cartao-damasco {
+  background: var(--sol-damasco);
+}
+
+.cartao-lilas {
+  background: var(--sol-lilas);
+}
+
+.cartao-menta {
+  background: var(--sol-menta);
+}
+
+.cartao-manteiga {
+  background: var(--sol-manteiga);
+}
+
+.nota {
+  margin: 1rem 0 0;
+  color: var(--sol-suave);
+}

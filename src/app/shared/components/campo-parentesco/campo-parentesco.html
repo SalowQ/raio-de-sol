@@ -1,0 +1,15 @@
+<mat-form-field appearance="outline" class="campo" subscriptSizing="dynamic">
+  <mat-label>Parentesco com a criança</mat-label>
+  <input
+    matInput
+    type="text"
+    [formControl]="controle()"
+    [maxlength]="tamanhoMaximo"
+    autocomplete="off"
+    aria-required="false"
+  />
+  <mat-hint>Opcional. Pode ficar em branco.</mat-hint>
+  @if (controle().hasError('parentescoLongo')) {
+    <mat-error>Use no máximo {{ tamanhoMaximo }} caracteres.</mat-error>
+  }
+</mat-form-field>

@@ -1,0 +1,29 @@
+:host {
+  display: block;
+  min-height: 100%;
+}
+
+.pular {
+  position: absolute;
+  left: 0.5rem;
+  top: -3rem;
+  z-index: 3;
+  padding: 0.5rem 0.75rem;
+  background: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
+  text-decoration: none;
+}
+
+.pular:focus {
+  top: 0.5rem;
+}
+
+.pagina {
+  min-height: 100%;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+  background:
+    radial-gradient(circle at 85% 0, #ffe7c2 0, transparent 24%),
+    var(--sol-fundo);
+}
