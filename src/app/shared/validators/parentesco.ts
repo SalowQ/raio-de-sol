@@ -1,7 +1,25 @@
 import { FormControl, type ValidatorFn } from '@angular/forms';
 
-/** Limite do campo opcional de parentesco. A ONG não definiu uma lista fechada. */
+/** Limite do parentesco. A lista da tela é atalho; Outros continua texto livre. */
 export const TAMANHO_MAXIMO_PARENTESCO = 80;
+
+export const PARENTESCO_OUTROS = 'Outros';
+
+export const OPCOES_PARENTESCO = [
+  'Mãe',
+  'Pai',
+  'Avó',
+  'Avô',
+  'Irmã',
+  'Irmão',
+  'Tia',
+  'Tio',
+  'Madrasta',
+  'Padrasto',
+  'Responsável legal',
+  'Tutor',
+  PARENTESCO_OUTROS,
+] as const;
 
 export const parentescoOpcional: ValidatorFn = (controle) => {
   const valor = controle.value;
@@ -32,4 +50,39 @@ export function normalizarParentesco(valor: string | null | undefined): string |
 
   const texto = valor.trim();
   return texto.length === 0 ? null : texto;
+}
+
+const parentescosDaLista = new Set<string>(
+  OPCOES_PARENTESCO.filter((opcao) => opcao !== PARENTESCO_OUTROS),
+);
+
+export function separarParentesco(valor: string | null | undefined): {
+  opcao: string | null;
+  outro: string;
+} {
+  const texto = normalizarParentesco(valor);
+  if (!texto || parentescosDaLista.has(texto)) {
+    return { opcao: texto, outro: '' };
+  }
+
+  return {
+    opcao: PARENTESCO_OUTROS,
+    outro: texto === PARENTESCO_OUTROS ? '' : texto,
+  };
+}
+
+export function juntarParentesco(
+  opcao: string | null | undefined,
+  outro: string | null | undefined,
+): string | null {
+  const escolhido = normalizarParentesco(opcao);
+  if (!escolhido) {
+    return null;
+  }
+
+  if (escolhido !== PARENTESCO_OUTROS) {
+    return escolhido;
+  }
+
+  return normalizarParentesco(outro) ?? PARENTESCO_OUTROS;
 }

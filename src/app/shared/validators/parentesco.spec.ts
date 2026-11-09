@@ -1,6 +1,9 @@
 import {
   criarControleParentesco,
+  juntarParentesco,
   normalizarParentesco,
+  PARENTESCO_OUTROS,
+  separarParentesco,
   TAMANHO_MAXIMO_PARENTESCO,
 } from './parentesco';
 
@@ -27,5 +30,14 @@ describe('parentesco', () => {
     expect(normalizarParentesco(undefined)).toBeNull();
     expect(normalizarParentesco('   ')).toBeNull();
     expect(normalizarParentesco('  Avó  ')).toBe('Avó');
+  });
+
+  it('guarda a opção da lista e o texto de Outros', () => {
+    expect(separarParentesco('Mãe')).toEqual({ opcao: 'Mãe', outro: '' });
+    expect(separarParentesco('Prima')).toEqual({ opcao: PARENTESCO_OUTROS, outro: 'Prima' });
+    expect(juntarParentesco('Pai', 'ignorado')).toBe('Pai');
+    expect(juntarParentesco(PARENTESCO_OUTROS, ' Prima ')).toBe('Prima');
+    expect(juntarParentesco(PARENTESCO_OUTROS, '   ')).toBe(PARENTESCO_OUTROS);
+    expect(juntarParentesco(null, 'Prima')).toBeNull();
   });
 });

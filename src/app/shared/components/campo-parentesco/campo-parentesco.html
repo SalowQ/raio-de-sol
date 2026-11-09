@@ -1,15 +1,28 @@
 <mat-form-field appearance="outline" class="campo" subscriptSizing="dynamic">
   <mat-label>Parentesco com a criança</mat-label>
-  <input
-    matInput
-    type="text"
-    [formControl]="controle()"
-    [maxlength]="tamanhoMaximo"
-    autocomplete="off"
-    aria-required="false"
-  />
+  <mat-select [formControl]="controle()" aria-required="false">
+    <mat-option [value]="null">Não informado</mat-option>
+    @for (opcao of opcoes; track opcao) {
+      <mat-option [value]="opcao">{{ opcao }}</mat-option>
+    }
+  </mat-select>
   <mat-hint>Opcional. Pode ficar em branco.</mat-hint>
-  @if (controle().hasError('parentescoLongo')) {
-    <mat-error>Use no máximo {{ tamanhoMaximo }} caracteres.</mat-error>
-  }
 </mat-form-field>
+
+@if (controle().value === 'Outros') {
+  <mat-form-field appearance="outline" class="campo" subscriptSizing="dynamic">
+    <mat-label>Qual parentesco?</mat-label>
+    <input
+      matInput
+      type="text"
+      [formControl]="controleOutro()"
+      [maxlength]="tamanhoMaximo"
+      autocomplete="off"
+      aria-required="false"
+    />
+    <mat-hint>Opcional. Use quando a lista não couber.</mat-hint>
+    @if (controleOutro().hasError('parentescoLongo')) {
+      <mat-error>Use no máximo {{ tamanhoMaximo }} caracteres.</mat-error>
+    }
+  </mat-form-field>
+}

@@ -56,6 +56,99 @@ app-root {
   outline-offset: 2px;
 }
 
+.aviso-erro .mdc-snackbar__surface {
+  background-color: #8a341c;
+}
+
+.aviso-erro .mdc-snackbar__label,
+.aviso-erro .mat-mdc-snack-bar-action {
+  color: #fffdfb;
+}
+
+/* Listagens do painel: busca, linhas e paginação no mesmo bloco. */
+.painel-lista {
+  background: #fff;
+  border-radius: var(--sol-raio);
+  box-shadow: var(--sol-sombra);
+  overflow: hidden;
+}
+
+.painel-lista .busca {
+  padding: 1.15rem 1.25rem 1rem;
+  border-bottom: 1px solid #eadfd4;
+}
+
+.painel-lista .corpo {
+  min-height: 4.5rem;
+}
+
+.painel-lista .lista {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.painel-lista .linha {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+  padding: 0.95rem 1.25rem;
+  color: inherit;
+  text-decoration: none;
+}
+
+.painel-lista .lista li:nth-child(odd) .linha {
+  background: #fff;
+}
+
+.painel-lista .lista li:nth-child(even) .linha {
+  background: #f3e4d6;
+}
+
+.painel-lista .lista li .linha:hover,
+.painel-lista .lista li .linha:focus-visible {
+  background: var(--sol-acento-suave);
+}
+
+.painel-lista .paginacao {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  margin-top: 0.85rem;
+  padding: 0.85rem 1.25rem 0.65rem;
+  border-top: 1px solid #eadfd4;
+}
+
+.painel-lista .resumo {
+  margin: 0;
+  color: var(--sol-tinta);
+  font-weight: 600;
+}
+
+.painel-lista .mat-mdc-paginator-range-label {
+  display: none;
+}
+
+.painel-lista .mat-mdc-paginator {
+  background: transparent;
+}
+
+.painel-lista app-carregando,
+.painel-lista app-estado-erro,
+.painel-lista app-estado-vazio {
+  display: block;
+  padding: 1.25rem 1.25rem 0.35rem;
+}
+
+.painel-lista app-estado-vazio .vazio {
+  padding: 0.35rem 0 0.85rem;
+  background: transparent;
+  box-shadow: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

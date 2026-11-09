@@ -1,0 +1,72 @@
+@if (carregando()) {
+  <app-carregando rotulo="Carregando perfil" />
+} @else if (perfil(); as ficha) {
+  <header class="topo">
+    <div class="titulo">
+      <h1>{{ ficha.nome }}</h1>
+      <span class="badge" [attr.data-status]="ficha.status">{{ rotuloStatus(ficha.status) }}</span>
+    </div>
+    <div class="acoes">
+      <a mat-stroked-button routerLink="/criancas">Lista</a>
+      <a mat-flat-button color="primary" [routerLink]="['/criancas', ficha.id, 'editar']">Editar</a>
+    </div>
+  </header>
+
+  <mat-tab-group animationDuration="200ms">
+    <mat-tab label="Cadastro">
+      <div class="painel">
+        <section>
+          <h2>Criança</h2>
+          <dl>
+            <div><dt>RG</dt><dd>{{ texto(ficha.rg) }}</dd></div>
+            <div><dt>Órgão emissor</dt><dd>{{ texto(ficha.orgao_emissor_rg) }}</dd></div>
+            <div><dt>CPF</dt><dd>{{ ficha.cpf ? formatarCpf(ficha.cpf) : 'Não informado' }}</dd></div>
+            <div><dt>Nascimento</dt><dd>{{ nascimento(ficha.data_nascimento) }}</dd></div>
+            <div><dt>Ingresso</dt><dd>{{ dataLegivel(ficha.data_ingresso) }}</dd></div>
+            <div><dt>Benefício</dt><dd>{{ beneficio(ficha) }}</dd></div>
+            <div class="largo"><dt>Observações</dt><dd>{{ texto(ficha.observacoes) }}</dd></div>
+          </dl>
+        </section>
+        <section>
+          <h2>Responsável principal</h2>
+          @if (ficha.responsavel; as responsavel) {
+            <dl>
+              <div><dt>Nome</dt><dd>{{ responsavel.nome }}</dd></div>
+              <div><dt>Parentesco</dt><dd>{{ texto(responsavel.parentesco) }}</dd></div>
+              <div><dt>RG</dt><dd>{{ texto(responsavel.rg) }}</dd></div>
+              <div><dt>Órgão emissor</dt><dd>{{ texto(responsavel.orgao_emissor_rg) }}</dd></div>
+              <div><dt>CPF</dt><dd>{{ responsavel.cpf ? formatarCpf(responsavel.cpf) : 'Não informado' }}</dd></div>
+              <div><dt>E-mail</dt><dd>{{ texto(responsavel.email) }}</dd></div>
+              <div><dt>Telefone</dt><dd>{{ responsavel.telefone ? formatarTelefone(responsavel.telefone) : 'Não informado' }}</dd></div>
+              @if (!responsavel.email && !responsavel.telefone && responsavel.contato) {
+                <div><dt>Contato antigo</dt><dd>{{ responsavel.contato }}</dd></div>
+              }
+            </dl>
+          } @else {
+            <p>Nenhum responsável principal neste cadastro.</p>
+          }
+        </section>
+      </div>
+    </mat-tab>
+    <mat-tab label="Documentos">
+      <app-estado-vazio
+        titulo="Documentos"
+        descricao="O envio, a validação e as versões dos documentos entram na próxima etapa."
+      />
+    </mat-tab>
+    <mat-tab label="Presença">
+      <app-estado-vazio
+        titulo="Presença"
+        descricao="O registro de presença ainda não está disponível neste perfil."
+      />
+    </mat-tab>
+    <mat-tab label="Histórico">
+      <app-estado-vazio
+        titulo="Histórico"
+        descricao="As alterações deste cadastro passam a aparecer aqui quando o histórico estiver ativo."
+      />
+    </mat-tab>
+  </mat-tab-group>
+} @else {
+  <app-estado-erro [mensagem]="erro() ?? 'Cadastro não encontrado.'" />
+}

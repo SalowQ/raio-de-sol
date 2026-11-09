@@ -1,0 +1,8 @@
+<h2 mat-dialog-title>Cadastro concluído</h2>
+<mat-dialog-content>
+  <p>O cadastro de {{ dados.nome }} foi salvo. Deseja cadastrar outra criança ou ver o perfil?</p>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-stroked-button type="button" [mat-dialog-close]="'outro'">Cadastrar outra</button>
+  <button mat-flat-button color="primary" type="button" [mat-dialog-close]="'perfil'">Ver perfil</button>
+</mat-dialog-actions>

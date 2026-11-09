@@ -40,8 +40,31 @@ export const routes: Routes = [
       },
       {
         path: 'criancas',
-        title: 'Crianças',
-        loadComponent: () => import('./features/criancas/criancas').then((m) => m.Criancas),
+        children: [
+          {
+            path: '',
+            title: 'Crianças',
+            loadComponent: () => import('./features/criancas/criancas').then((m) => m.Criancas),
+          },
+          {
+            path: 'nova',
+            title: 'Nova criança',
+            loadComponent: () =>
+              import('./features/criancas/formulario-crianca').then((m) => m.FormularioCrianca),
+          },
+          {
+            path: ':id',
+            title: 'Perfil da criança',
+            loadComponent: () =>
+              import('./features/criancas/perfil-crianca').then((m) => m.PerfilCrianca),
+          },
+          {
+            path: ':id/editar',
+            title: 'Editar criança',
+            loadComponent: () =>
+              import('./features/criancas/formulario-crianca').then((m) => m.FormularioCrianca),
+          },
+        ],
       },
       {
         path: 'cadastros-pendentes',

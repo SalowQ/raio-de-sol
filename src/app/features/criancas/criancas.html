@@ -1,0 +1,65 @@
+<header class="topo">
+  <div>
+    <p class="olho">Cadastros</p>
+    <h1>Crianças</h1>
+  </div>
+  <a mat-flat-button color="primary" routerLink="/criancas/nova">Nova criança</a>
+</header>
+
+<section class="painel-lista">
+  <form class="busca filtros" (ngSubmit)="buscar(0)">
+    <mat-form-field appearance="outline" subscriptSizing="dynamic">
+      <mat-label>Nome</mat-label>
+      <input matInput type="search" [formControl]="nome" autocomplete="off" />
+    </mat-form-field>
+    <mat-form-field appearance="outline" subscriptSizing="dynamic">
+      <mat-label>Situação</mat-label>
+      <mat-select [formControl]="status" (selectionChange)="buscar(0)">
+        <mat-option value="">Todas</mat-option>
+        @for (opcao of statusOpcoes; track opcao.valor) {
+          <mat-option [value]="opcao.valor">{{ opcao.rotulo }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    <button mat-stroked-button type="submit">Pesquisar</button>
+  </form>
+
+  <div class="corpo">
+    @if (carregando()) {
+      <app-carregando rotulo="Buscando cadastros" />
+    } @else if (erro()) {
+      <app-estado-erro [mensagem]="erro()!" />
+    } @else if (itens().length === 0) {
+      <app-estado-vazio
+        titulo="Nenhum cadastro encontrado"
+        descricao="Ajuste a pesquisa ou comece um novo cadastro. A família ainda envia os dados pela equipe, nesta tela."
+      />
+    } @else {
+      <ul class="lista">
+        @for (crianca of itens(); track crianca.id) {
+          <li>
+            <a class="linha" [routerLink]="['/criancas', crianca.id]">
+              <span class="nome">{{ crianca.nome }}</span>
+              <span class="etiquetas">
+                <span>{{ rotuloStatus(crianca.status) }}</span>
+                <span>{{ rotuloBeneficio(crianca.recebe_beneficio) }}</span>
+              </span>
+            </a>
+          </li>
+        }
+      </ul>
+    }
+  </div>
+
+  <footer class="paginacao">
+    <p class="resumo">{{ resumoPagina() }}</p>
+    <mat-paginator
+      [length]="total()"
+      [pageIndex]="pagina()"
+      [pageSize]="tamanhoPagina"
+      [hidePageSize]="true"
+      (page)="mudarPagina($event)"
+      aria-label="Páginas de crianças"
+    />
+  </footer>
+</section>

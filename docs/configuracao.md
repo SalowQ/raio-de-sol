@@ -22,8 +22,10 @@ O script recusa chave de serviço e não grava o arquivo nesse caso.
 3. Em Authentication, confirme que o provedor de e-mail está ligado.
 4. Em URL Configuration, coloque a URL do site. Em desenvolvimento, `http://localhost:4200`. Inclua `http://localhost:4200/entrar` nas URLs de redirecionamento, para a recuperação de senha.
 5. No SQL Editor, execute o arquivo [supabase/migrations/20261107170000_perfis_usuarios.sql](../supabase/migrations/20261107170000_perfis_usuarios.sql).
-6. Em Authentication, crie o usuário do funcionário e confirme o e-mail por lá.
-7. No SQL Editor, vincule o perfil. Troque o identificador e o nome pelos da conta criada:
+6. No SQL Editor, execute também [supabase/migrations/20261108160000_cadastros.sql](../supabase/migrations/20261108160000_cadastros.sql). Ele cria crianças, responsáveis, benefícios e as funções de gravação. Sem esse arquivo, a tela de crianças não consegue salvar.
+7. No SQL Editor, execute [supabase/migrations/20261108210000_orgao_emissor_contato.sql](../supabase/migrations/20261108210000_orgao_emissor_contato.sql). Ele acrescenta órgão emissor do RG, e-mail e telefone. Sem esse arquivo, salvar o cadastro novo falha.
+8. Em Authentication, crie o usuário do funcionário e confirme o e-mail por lá.
+9. No SQL Editor, vincule o perfil. Troque o identificador e o nome pelos da conta criada:
 
 ```sql
 insert into public.perfis_usuarios (id, nome)

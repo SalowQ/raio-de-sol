@@ -8,11 +8,11 @@ Parentesco com a criança:
 
 - É opcional. Pode ficar em branco.
 - Vale para a ligação entre uma criança e um responsável, porque a mesma pessoa pode responder por mais de uma criança.
-- É texto livre. A ONG não definiu uma lista fechada de parentescos.
-- O formulário aceita até 80 caracteres. Texto só com espaços é gravado como nulo.
-- Na Etapa 2, a coluna será `crianca_responsaveis.parentesco text null`, com a restrição `char_length(parentesco) <= 80` quando houver texto.
+- A tela oferece uma lista para agilizar: Mãe, Pai, Avó, Avô, Irmã, Irmão, Tia, Tio, Madrasta, Padrasto, Responsável legal, Tutor e, por último, Outros.
+- Outros abre um texto livre, até 80 caracteres. Se ficar em branco, grava a palavra Outros. A coluna continua `text null`; a lista não é uma regra fechada do Instituto.
+- A coluna é `crianca_responsaveis.parentesco text null`, com a restrição `char_length(parentesco) <= 80` quando houver texto.
 
-O campo já existe na interface reutilizável `CampoParentesco` e na validação `parentescoOpcional`. A tela de cadastro que o utiliza entra na Etapa 2.
+O cadastro de crianças usa o campo `CampoParentesco`. Texto só com espaços é gravado como nulo.
 
 ## Ainda em aberto com o Instituto
 
