@@ -9,10 +9,22 @@
   >
     <div class="marca-bloco">
       <span class="sol" aria-hidden="true"></span>
-      <div>
+      <div class="marca-textos">
         <p class="marca" id="rotulo-menu">Raio de Sol</p>
         <p class="submarca">Instituto</p>
       </div>
+      <button
+        class="seta"
+        type="button"
+        (click)="alternarMenu()"
+        aria-expanded="true"
+        aria-label="Ocultar menu"
+        aria-controls="menu-principal"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M14.5 6.5 9 12l5.5 5.5" />
+        </svg>
+      </button>
     </div>
     <nav aria-labelledby="rotulo-menu">
       <mat-nav-list>
@@ -58,19 +70,19 @@
   </mat-sidenav>
   <mat-sidenav-content>
     <header class="barra">
-      <button
-        class="seta"
-        type="button"
-        (click)="alternarMenu()"
-        [attr.aria-expanded]="menuAberto()"
-        [attr.aria-label]="menuAberto() ? 'Ocultar menu' : 'Mostrar menu'"
-        aria-controls="menu-principal"
-      >
-        <svg viewBox="0 0 24 24" aria-hidden="true" [class.fechada]="!menuAberto()">
-          <path d="M14.5 6.5 9 12l5.5 5.5" />
-        </svg>
-      </button>
       @if (!menuAberto()) {
+        <button
+          class="seta"
+          type="button"
+          (click)="alternarMenu()"
+          aria-expanded="false"
+          aria-label="Mostrar menu"
+          aria-controls="menu-principal"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M5 7h14M5 12h14M5 17h14" />
+          </svg>
+        </button>
         <span class="marca-barra" animate.enter="marca-entra" animate.leave="marca-sai">
           <span class="sol sol-barra" aria-hidden="true"></span>
           <span class="marca-textos">
