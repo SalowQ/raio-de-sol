@@ -7,6 +7,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { map } from 'rxjs';
 import { Autenticacao } from '../../core/auth/autenticacao';
+import { BotaoVoltar } from '../../shared/components/botao-voltar/botao-voltar';
 
 interface ItemMenu {
   rotulo: string;
@@ -29,6 +30,7 @@ function telaLargaInicial(): boolean {
     RouterLink,
     RouterLinkActive,
     RouterOutlet,
+    BotaoVoltar,
   ],
   templateUrl: './layout-administrativo.html',
   styleUrl: './layout-administrativo.scss',
