@@ -12,7 +12,7 @@
     </div>
   </header>
 
-  <mat-tab-group animationDuration="200ms">
+  <mat-tab-group animationDuration="200ms" [selectedIndex]="aba()">
     <mat-tab label="Cadastro">
       <div class="painel">
         <section>
@@ -49,10 +49,7 @@
       </div>
     </mat-tab>
     <mat-tab label="Documentos">
-      <app-estado-vazio
-        titulo="Documentos"
-        descricao="O envio, a validação e as versões dos documentos entram na próxima etapa."
-      />
+      <app-checklist-crianca [criancaId]="ficha.id" />
     </mat-tab>
     <mat-tab label="Presença">
       <app-estado-vazio

@@ -17,7 +17,7 @@ O cadastro de crianças usa o campo `CampoParentesco`. Texto só com espaços é
 ## Ainda em aberto com o Instituto
 
 - Data de nascimento, data de ingresso e observações administrativas da criança continuam propostas e opcionais.
-- Obrigatoriedade de cada documento. O catálogo futuro nasce com todos os tipos opcionais.
+- Obrigatoriedade de cada documento. O catálogo da Etapa 3 já existe e todos os tipos nascem opcionais. A pendência só conta um tipo depois que o Instituto marcar `obrigatorio`.
 - BPC, LOAS e Bolsa Família permanecem nomes distintos da ficha. Isso já está definido para a Etapa 2 e não deve ser unificado.
 - Base legal, aviso de privacidade, prazos de retenção e procedimento de exclusão.
 - Turnos de atendimento. A presença futura usa uma sessão chamada `dia` até a ONG confirmar outro calendário.

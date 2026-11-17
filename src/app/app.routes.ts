@@ -75,11 +75,6 @@ export const routes: Routes = [
           ),
       },
       {
-        path: 'documentos',
-        title: 'Documentos',
-        loadComponent: () => import('./features/documentos/documentos').then((m) => m.Documentos),
-      },
-      {
         path: 'presenca',
         title: 'Presença',
         loadComponent: () => import('./features/presencas/presencas').then((m) => m.Presencas),

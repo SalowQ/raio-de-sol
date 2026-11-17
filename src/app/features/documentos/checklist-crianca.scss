@@ -1,0 +1,121 @@
+.nota {
+  margin: 0.75rem 0 1rem;
+  color: var(--sol-suave);
+  line-height: 1.5;
+}
+
+.tipo {
+  padding: 0.85rem 1.25rem 1rem;
+  border-top: 1px solid var(--sol-linha);
+}
+
+.tipo:first-child {
+  border-top: none;
+}
+
+.linha {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+}
+
+.nome {
+  font-weight: 700;
+}
+
+.etiquetas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  color: var(--sol-suave);
+}
+
+.etiquetas span,
+.pendente {
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+  background: var(--sol-acento-suave);
+}
+
+.pendente {
+  background: var(--sol-manteiga);
+  color: var(--sol-texto-pendente);
+  font-weight: 700;
+}
+
+.acoes,
+.rejeicao,
+.versoes li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.acoes,
+.rejeicao {
+  margin-top: 0.75rem;
+}
+
+.enviar {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.25rem;
+  padding: 0 0.9rem;
+  border-radius: 999px;
+  background: var(--sol-acento);
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.enviar input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+.rejeicao {
+  align-items: flex-end;
+}
+
+.rejeicao label {
+  display: grid;
+  gap: 0.35rem;
+  flex: 1;
+  min-width: 12rem;
+  color: var(--sol-suave);
+  font-size: 0.85rem;
+}
+
+textarea {
+  width: 100%;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--sol-linha);
+  border-radius: 0.7rem;
+  background: var(--sol-papel);
+  color: var(--sol-tinta);
+  font: inherit;
+}
+
+.versoes {
+  margin: 0.75rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.versoes li {
+  padding: 0.45rem 0;
+  color: var(--sol-suave);
+}
+
+@media (max-width: 720px) {
+  .linha {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

@@ -10,7 +10,6 @@ const SEM_VOLTAR = new Set([
   '/painel',
   '/criancas',
   '/cadastros-pendentes',
-  '/documentos',
   '/presenca',
   '/historico',
 ]);

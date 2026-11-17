@@ -22,12 +22,16 @@ describe('Criancas', () => {
                     nome: 'Criança Exemplo',
                     status: 'ativo',
                     recebe_beneficio: 'nao_informado',
+                    documentos_enviados: 0,
+                    documentos_total: 10,
                   },
                   {
                     id: '2',
                     nome: 'Outra Criança',
                     status: 'inativo',
                     recebe_beneficio: 'recebe',
+                    documentos_enviados: 3,
+                    documentos_total: 7,
                   },
                 ],
                 total: 25,
@@ -45,6 +49,8 @@ describe('Criancas', () => {
     const painel = fixture.nativeElement.querySelector('.painel-lista') as HTMLElement;
     expect(painel.querySelector('.busca')).toBeTruthy();
     expect(painel.querySelectorAll('.linha').length).toBe(2);
+    expect(painel.textContent).toContain('0/10 documentos');
+    expect(painel.textContent).toContain('3/7 documentos');
     expect(painel.querySelector('.paginacao')).toBeTruthy();
     expect(painel.querySelector('.resumo')?.textContent).toContain('Página 1 de 3 · 25 resultados');
     const proxima = painel.querySelector('[aria-label="Próxima página"]') as HTMLButtonElement;

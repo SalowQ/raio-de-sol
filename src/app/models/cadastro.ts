@@ -7,6 +7,8 @@ export interface CriancaResumo {
   nome: string;
   status: StatusCrianca;
   recebe_beneficio: SituacaoBeneficio;
+  documentos_enviados: number;
+  documentos_total: number;
 }
 
 export interface BeneficioCatalogo {

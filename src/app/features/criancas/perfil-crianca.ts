@@ -6,6 +6,7 @@ import type { BeneficioCatalogo, CriancaPerfil } from '../../models/cadastro';
 import { Carregando } from '../../shared/components/carregando/carregando';
 import { EstadoErro } from '../../shared/components/estado-erro/estado-erro';
 import { EstadoVazio } from '../../shared/components/estado-vazio/estado-vazio';
+import { ChecklistCrianca } from '../documentos/checklist-crianca';
 import { CadastroServico } from './cadastro-servico';
 import {
   formatarCpf,
@@ -18,7 +19,7 @@ import {
 
 @Component({
   selector: 'app-perfil-crianca',
-  imports: [RouterLink, MatButtonModule, MatTabsModule, Carregando, EstadoErro, EstadoVazio],
+  imports: [RouterLink, MatButtonModule, MatTabsModule, Carregando, EstadoErro, EstadoVazio, ChecklistCrianca],
   templateUrl: './perfil-crianca.html',
   styleUrl: './perfil-crianca.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,8 +35,12 @@ export class PerfilCrianca implements OnInit {
   readonly rotuloStatus = rotuloStatus;
   readonly formatarCpf = formatarCpf;
   readonly formatarTelefone = formatarTelefone;
+  readonly aba = signal(0);
 
   ngOnInit(): void {
+    if (this.rota.snapshot.queryParamMap?.get('aba') === 'documentos') {
+      this.aba.set(1);
+    }
     void this.carregar();
   }
 

@@ -17,6 +17,7 @@ import { EstadoErro } from '../../shared/components/estado-erro/estado-erro';
 import { EstadoVazio } from '../../shared/components/estado-vazio/estado-vazio';
 import { CadastroServico } from './cadastro-servico';
 import { rotuloPaginacao, TAMANHO_PAGINA } from './paginacao';
+import { rotuloQuantidadeDocumentos } from '../documentos/regras-documento';
 import { rotuloBeneficio, rotuloStatus, STATUS_CRIANCA } from './regras-cadastro';
 
 @Component({
@@ -59,6 +60,8 @@ export class Criancas implements OnInit {
   readonly erro = signal<string | null>(null);
   readonly rotuloStatus = rotuloStatus;
   readonly rotuloBeneficio = rotuloBeneficio;
+  readonly rotuloDocumentos = (crianca: CriancaResumo) =>
+    rotuloQuantidadeDocumentos(crianca.documentos_enviados, crianca.documentos_total);
 
   ngOnInit(): void {
     void this.buscar();

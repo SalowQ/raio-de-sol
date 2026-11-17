@@ -24,8 +24,9 @@ O script recusa chave de serviço e não grava o arquivo nesse caso.
 5. No SQL Editor, execute o arquivo [supabase/migrations/20261107170000_perfis_usuarios.sql](../supabase/migrations/20261107170000_perfis_usuarios.sql).
 6. No SQL Editor, execute também [supabase/migrations/20261108160000_cadastros.sql](../supabase/migrations/20261108160000_cadastros.sql). Ele cria crianças, responsáveis, benefícios e as funções de gravação. Sem esse arquivo, a tela de crianças não consegue salvar.
 7. No SQL Editor, execute [supabase/migrations/20261108210000_orgao_emissor_contato.sql](../supabase/migrations/20261108210000_orgao_emissor_contato.sql). Ele acrescenta órgão emissor do RG, e-mail e telefone. Sem esse arquivo, salvar o cadastro novo falha.
-8. Em Authentication, crie o usuário do funcionário e confirme o e-mail por lá.
-9. No SQL Editor, vincule o perfil. Troque o identificador e o nome pelos da conta criada:
+8. No SQL Editor, execute [supabase/migrations/20261116210000_documentos.sql](../supabase/migrations/20261116210000_documentos.sql). Ele cria o catálogo, as versões e o bucket privado `documentos`. Sem esse arquivo, o checklist não carrega e o envio falha.
+9. Em Authentication, crie o usuário do funcionário e confirme o e-mail por lá.
+10. No SQL Editor, vincule o perfil. Troque o identificador e o nome pelos da conta criada:
 
 ```sql
 insert into public.perfis_usuarios (id, nome)

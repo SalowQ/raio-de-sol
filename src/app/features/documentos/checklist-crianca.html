@@ -1,0 +1,92 @@
+<p class="nota">
+  PDF, JPEG ou PNG, até 10 MB. Esse tamanho é uma sugestão e ainda não foi confirmado pelo Instituto.
+  Cada envio cria uma versão nova e a anterior permanece.
+</p>
+
+@if (erro(); as mensagem) {
+  <app-estado-erro [mensagem]="mensagem" />
+}
+
+@if (carregando()) {
+  <app-carregando rotulo="Carregando documentos" />
+} @else {
+  <section class="painel-lista">
+    <ul class="lista">
+      @for (item of itens(); track item.tipo.id) {
+        <li class="tipo">
+          <div class="linha">
+            <span class="nome">{{ item.tipo.nome }}</span>
+            <span class="etiquetas">
+              <span>{{ item.tipo.obrigatorio ? 'Obrigatório' : 'Opcional' }}</span>
+              <span>{{ rotuloVersao(item.versaoAtual?.status ?? null) }}</span>
+              @if (item.pendente) {
+                <span class="pendente">Pendente</span>
+              }
+            </span>
+          </div>
+          <div class="acoes">
+            <label class="enviar">
+              <input
+                type="file"
+                accept="application/pdf,image/jpeg,image/png"
+                [disabled]="enviando() === item.tipo.id"
+                (change)="escolherArquivo(item, $event)"
+              />
+              {{ enviando() === item.tipo.id ? 'Enviando...' : 'Enviar versão' }}
+            </label>
+            @if (item.versaoAtual; as atual) {
+              <button mat-stroked-button type="button" (click)="abrir(atual.caminho)">Abrir</button>
+              <button mat-stroked-button type="button" (click)="definirStatus(atual.id, 'em_analise')">
+                Em análise
+              </button>
+              <button mat-stroked-button type="button" (click)="definirStatus(atual.id, 'aprovado')">
+                Aprovar
+              </button>
+              <button mat-stroked-button type="button" (click)="iniciarRejeicao(atual.id)">Rejeitar</button>
+            }
+            @if (quantidade(item) > 0) {
+              <button mat-button type="button" (click)="alternarVersoes(item.tipo.id)">
+                Versões ({{ quantidade(item) }})
+              </button>
+            }
+          </div>
+          @if (item.versaoAtual; as atual) {
+            @if (rejeitando() === atual.id) {
+              <div class="rejeicao">
+                <label>
+                  Observação
+                  <textarea
+                    rows="2"
+                    maxlength="500"
+                    [value]="observacao()"
+                    (input)="aoDigitarObservacao($event)"
+                  ></textarea>
+                </label>
+                <button mat-flat-button color="primary" type="button" (click)="definirStatus(atual.id, 'rejeitado')">
+                  Confirmar rejeição
+                </button>
+                <button mat-button type="button" (click)="cancelarRejeicao()">Cancelar</button>
+              </div>
+            }
+          }
+          @if (abertas().has(item.tipo.id) && item.documento) {
+            <ol class="versoes">
+              @for (versao of versoesRecentes(item.documento.versoes); track versao.id) {
+                <li>
+                  <span>Versão {{ versao.numero }}</span>
+                  <span>{{ rotuloVersao(versao.status) }}</span>
+                  <span>{{ formatarQuando(versao.criado_em) }}</span>
+                  <span>{{ versao.nome_arquivo }}</span>
+                  @if (versao.observacao) {
+                    <span>{{ versao.observacao }}</span>
+                  }
+                  <button mat-button type="button" (click)="abrir(versao.caminho)">Abrir</button>
+                </li>
+              }
+            </ol>
+          }
+        </li>
+      }
+    </ul>
+  </section>
+}

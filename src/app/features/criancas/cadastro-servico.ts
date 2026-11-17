@@ -39,8 +39,18 @@ export class CadastroServico {
       throw new Error(mensagemCadastro(error.code, error.message));
     }
 
+    const linhas = (data ?? []) as Omit<CriancaResumo, 'documentos_enviados' | 'documentos_total'>[];
+    const quantidades = await this.quantidadesDocumentos(
+      cliente,
+      linhas.map((item) => item.id),
+    );
+
     return {
-      itens: (data ?? []) as CriancaResumo[],
+      itens: linhas.map((item) => ({
+        ...item,
+        documentos_enviados: quantidades.enviados.get(item.id) ?? 0,
+        documentos_total: quantidades.total,
+      })),
       total: count ?? 0,
     };
   }
@@ -102,6 +112,41 @@ export class CadastroServico {
     if (error) {
       throw new Error(mensagemCadastro(error.code, error.message));
     }
+  }
+
+  private async quantidadesDocumentos(
+    cliente: NonNullable<SupabaseCliente['cliente']>,
+    ids: string[],
+  ): Promise<{ enviados: Map<string, number>; total: number }> {
+    const tipos = await cliente
+      .from('tipos_documento')
+      .select('id', { count: 'exact', head: true })
+      .eq('ativo', true);
+
+    if (tipos.error) {
+      throw new Error(mensagemCadastro(tipos.error.code, tipos.error.message));
+    }
+
+    const enviados = new Map<string, number>();
+    if (ids.length === 0) {
+      return { enviados, total: tipos.count ?? 0 };
+    }
+
+    const resumo = await cliente
+      .from('resumo_documentos')
+      .select('crianca_id, enviados')
+      .in('crianca_id', ids);
+
+    if (resumo.error) {
+      throw new Error(mensagemCadastro(resumo.error.code, resumo.error.message));
+    }
+
+    for (const linha of resumo.data ?? []) {
+      const item = linha as { crianca_id: string; enviados: number };
+      enviados.set(item.crianca_id, item.enviados);
+    }
+
+    return { enviados, total: tipos.count ?? 0 };
   }
 
   private cliente() {

@@ -12,7 +12,7 @@ import { BotaoVoltar } from '../../shared/components/botao-voltar/botao-voltar';
 interface ItemMenu {
   rotulo: string;
   caminho: string;
-  icone: 'painel' | 'criancas' | 'pendentes' | 'documentos' | 'presenca' | 'historico' | 'configuracoes';
+  icone: 'painel' | 'criancas' | 'pendentes' | 'presenca' | 'historico' | 'configuracoes';
 }
 
 function telaLargaInicial(): boolean {
@@ -52,7 +52,6 @@ export class LayoutAdministrativo {
     { rotulo: 'Painel', caminho: '/painel', icone: 'painel' },
     { rotulo: 'Crianças', caminho: '/criancas', icone: 'criancas' },
     { rotulo: 'Cadastros pendentes', caminho: '/cadastros-pendentes', icone: 'pendentes' },
-    { rotulo: 'Documentos', caminho: '/documentos', icone: 'documentos' },
     { rotulo: 'Presença', caminho: '/presenca', icone: 'presenca' },
     { rotulo: 'Histórico', caminho: '/historico', icone: 'historico' },
     { rotulo: 'Configurações', caminho: '/configuracoes', icone: 'configuracoes' },
