@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -47,12 +47,16 @@ import { rotuloBeneficio, rotuloStatus, STATUS_CRIANCA } from './regras-cadastro
 })
 export class Criancas implements OnInit {
   private readonly cadastro = inject(CadastroServico);
+  private readonly rota = inject(ActivatedRoute);
 
   readonly statusOpcoes = STATUS_CRIANCA;
   // O pacote de testes pode ler a constante antes dela existir. O tamanho real continua 10.
   readonly tamanhoPagina = TAMANHO_PAGINA || 10;
   readonly nome = new FormControl('', { nonNullable: true });
-  readonly status = new FormControl<StatusCrianca | ''>('ativo', { nonNullable: true });
+  readonly status = new FormControl<StatusCrianca | ''>(
+    situacaoInicial(this.rota.snapshot.queryParamMap.get('situacao')),
+    { nonNullable: true },
+  );
   readonly itens = signal<CriancaResumo[]>([]);
   readonly total = signal(0);
   readonly pagina = signal(0);
@@ -96,6 +100,16 @@ export class Criancas implements OnInit {
   resumoPagina(): string {
     return rotuloPaginacao(this.pagina(), this.tamanhoPagina, this.total());
   }
+}
+
+export function situacaoInicial(valor: string | null): StatusCrianca | '' {
+  if (valor === 'ativo' || valor === 'pendente_validacao' || valor === 'inativo') {
+    return valor;
+  }
+  if (valor === 'todas') {
+    return '';
+  }
+  return 'ativo';
 }
 
 function textoDoErro(erro: unknown): string {

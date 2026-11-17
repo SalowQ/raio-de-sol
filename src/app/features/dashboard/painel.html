@@ -9,14 +9,31 @@
     <a mat-stroked-button routerLink="/criancas/nova">Novo cadastro</a>
   </nav>
 </section>
-<ul class="indicadores">
-  @for (item of indicadores; track item.rotulo) {
-    <li>
-      <article class="cartao" [class]="'cartao cartao-' + item.tom">
-        <h2>{{ item.rotulo }}</h2>
-        <p class="valor" aria-label="Ainda sem dados">—</p>
-      </article>
-    </li>
-  }
-</ul>
-<p class="nota">Os totais aparecem quando os cadastros estiverem disponíveis.</p>
+@if (carregando()) {
+  <app-carregando rotulo="Carregando o painel" />
+} @else if (erro(); as mensagem) {
+  <app-estado-erro [mensagem]="mensagem" />
+} @else {
+  <ul class="indicadores">
+    @for (item of indicadores(); track item.rotulo) {
+      <li>
+        @if (item.caminho) {
+          <a
+            class="cartao"
+            [class]="'cartao cartao-' + item.tom"
+            [routerLink]="item.caminho"
+            [queryParams]="item.parametros"
+          >
+            <h2>{{ item.rotulo }}</h2>
+            <p class="valor">{{ item.valor }}</p>
+          </a>
+        } @else {
+          <article class="cartao" [class]="'cartao cartao-' + item.tom">
+            <h2>{{ item.rotulo }}</h2>
+            <p class="valor">{{ item.valor }}</p>
+          </article>
+        }
+      </li>
+    }
+  </ul>
+}
