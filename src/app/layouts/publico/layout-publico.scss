@@ -24,6 +24,6 @@
   place-items: center;
   padding: 1.5rem;
   background:
-    radial-gradient(circle at 85% 0, #ffe7c2 0, transparent 24%),
+    radial-gradient(circle at 85% 0, var(--sol-brilho) 0, transparent 24%),
     var(--sol-fundo);
 }

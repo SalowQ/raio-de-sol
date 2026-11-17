@@ -1,0 +1,34 @@
+:host {
+  position: fixed;
+  right: max(1.25rem, env(safe-area-inset-right));
+  bottom: max(1.25rem, env(safe-area-inset-bottom));
+  z-index: 40;
+}
+
+button {
+  display: grid;
+  place-items: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: var(--sol-papel);
+  color: var(--sol-tinta);
+  box-shadow: var(--sol-sombra);
+  cursor: pointer;
+}
+
+button:hover {
+  background: var(--sol-acento-suave);
+}
+
+svg {
+  width: 1.35rem;
+  height: 1.35rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}

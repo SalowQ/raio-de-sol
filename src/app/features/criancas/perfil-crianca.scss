@@ -30,16 +30,16 @@ h1 {
 
 .badge[data-status='ativo'] {
   background: var(--sol-menta);
-  color: #1f6b45;
+  color: var(--sol-texto-ativo);
 }
 
 .badge[data-status='pendente_validacao'] {
   background: var(--sol-manteiga);
-  color: #7a5a10;
+  color: var(--sol-texto-pendente);
 }
 
 .badge[data-status='inativo'] {
-  background: #f0e4dc;
+  background: var(--sol-fundo-inativo);
   color: var(--sol-suave);
 }
 

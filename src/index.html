@@ -9,6 +9,13 @@
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   </head>
   <body>
+    <script>
+      try {
+        if (localStorage.getItem('raio-de-sol-tema') === 'escuro') {
+          document.documentElement.classList.add('escuro');
+        }
+      } catch (e) {}
+    </script>
     <app-root></app-root>
   </body>
 </html>

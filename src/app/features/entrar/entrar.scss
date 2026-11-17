@@ -9,7 +9,7 @@
   place-items: center;
   padding: 1.5rem;
   background:
-    radial-gradient(circle at 15% 10%, #ffe7c2 0, transparent 28%),
+    radial-gradient(circle at 15% 10%, var(--sol-brilho) 0, transparent 28%),
     var(--sol-fundo);
 }
 

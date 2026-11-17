@@ -19,15 +19,45 @@
   --sol-menta: #d7f3e3;
   --sol-lilas: #e6defe;
   --sol-manteiga: #fff0b8;
+  --sol-brilho: #ffe7c2;
+  --sol-linha: #eadfd4;
+  --sol-lista: #fff;
+  --sol-lista-par: #f3e4d6;
+  --sol-fundo-inativo: #f0e4dc;
+  --sol-texto-ativo: #1f6b45;
+  --sol-texto-pendente: #7a5a10;
   --sol-sombra: 0 12px 32px rgb(92 48 18 / 8%);
   --sol-raio: 1.5rem;
+  color-scheme: light;
+}
+
+html.escuro {
+  --sol-fundo: #1c1410;
+  --sol-papel: #2a211c;
+  --sol-tinta: #f6efe8;
+  --sol-suave: #cbb8aa;
+  --sol-acento: #f0a04b;
+  --sol-acento-suave: #4a2e22;
+  --sol-damasco: #4a3424;
+  --sol-menta: #1d3b2c;
+  --sol-lilas: #332c4a;
+  --sol-manteiga: #4a3d1c;
+  --sol-brilho: #4a2e22;
+  --sol-linha: #4a3b32;
+  --sol-lista: #2a211c;
+  --sol-lista-par: #352a24;
+  --sol-fundo-inativo: #3a302b;
+  --sol-texto-ativo: #b7ebc9;
+  --sol-texto-pendente: #ffe39a;
+  --sol-sombra: 0 12px 32px rgb(0 0 0 / 35%);
+  color-scheme: dark;
 }
 
 html {
   height: 100%;
   @include mat.theme((
     color: (
-      theme-type: light,
+      theme-type: color-scheme,
       primary: mat.$orange-palette,
       tertiary: mat.$yellow-palette,
     ),
@@ -39,7 +69,6 @@ html {
 body {
   height: 100%;
   margin: 0;
-  color-scheme: light;
   background-color: var(--sol-fundo);
   color: var(--sol-tinta);
   font: var(--mat-sys-body-medium);
@@ -67,7 +96,7 @@ app-root {
 
 /* Listagens do painel: busca, linhas e paginação no mesmo bloco. */
 .painel-lista {
-  background: #fff;
+  background: var(--sol-lista);
   border-radius: var(--sol-raio);
   box-shadow: var(--sol-sombra);
   overflow: hidden;
@@ -75,7 +104,7 @@ app-root {
 
 .painel-lista .busca {
   padding: 1.15rem 1.25rem 1rem;
-  border-bottom: 1px solid #eadfd4;
+  border-bottom: 1px solid var(--sol-linha);
 }
 
 .painel-lista .corpo {
@@ -99,11 +128,11 @@ app-root {
 }
 
 .painel-lista .lista li:nth-child(odd) .linha {
-  background: #fff;
+  background: var(--sol-lista);
 }
 
 .painel-lista .lista li:nth-child(even) .linha {
-  background: #f3e4d6;
+  background: var(--sol-lista-par);
 }
 
 .painel-lista .lista li .linha:hover,
@@ -119,7 +148,7 @@ app-root {
   gap: 0.5rem 1rem;
   margin-top: 0.85rem;
   padding: 0.85rem 1.25rem 0.65rem;
-  border-top: 1px solid #eadfd4;
+  border-top: 1px solid var(--sol-linha);
 }
 
 .painel-lista .resumo {
