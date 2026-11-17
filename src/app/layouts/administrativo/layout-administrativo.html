@@ -89,10 +89,10 @@
         </span>
       }
       <span class="espaco"></span>
-      <span class="pessoa">
+      <a class="pessoa" routerLink="/configuracoes" aria-label="Abrir configurações">
         <span class="avatar" aria-hidden="true">{{ inicial() }}</span>
         <span class="usuario">{{ nome() }}</span>
-      </span>
+      </a>
       <button mat-button type="button" (click)="sair()">Sair</button>
     </header>
     <main id="conteudo" class="conteudo" tabindex="-1">

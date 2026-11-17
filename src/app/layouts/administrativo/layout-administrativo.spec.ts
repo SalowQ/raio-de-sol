@@ -57,5 +57,6 @@ describe('LayoutAdministrativo', () => {
     expect(hamburguer.querySelectorAll('path').length).toBe(1);
     expect(hamburguer.querySelector('path')?.getAttribute('d')).toContain('M5 7h14');
     expect(fixture.componentInstance.menuAberto()).toBe(false);
+    expect(barra.querySelector('a.pessoa')?.getAttribute('href')).toBe('/configuracoes');
   });
 });
