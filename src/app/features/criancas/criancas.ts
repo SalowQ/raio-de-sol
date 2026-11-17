@@ -52,7 +52,7 @@ export class Criancas implements OnInit {
   // O pacote de testes pode ler a constante antes dela existir. O tamanho real continua 10.
   readonly tamanhoPagina = TAMANHO_PAGINA || 10;
   readonly nome = new FormControl('', { nonNullable: true });
-  readonly status = new FormControl<StatusCrianca | ''>('', { nonNullable: true });
+  readonly status = new FormControl<StatusCrianca | ''>('ativo', { nonNullable: true });
   readonly itens = signal<CriancaResumo[]>([]);
   readonly total = signal(0);
   readonly pagina = signal(0);

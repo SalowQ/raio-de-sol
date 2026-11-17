@@ -5,6 +5,8 @@ import { CadastroServico } from './cadastro-servico';
 import { Criancas } from './criancas';
 
 describe('Criancas', () => {
+  let ultimoFiltro: { status: string } | undefined;
+
   it('reúne busca, lista e paginação e mostra o total vindo da consulta', async () => {
     await TestBed.configureTestingModule({
       imports: [Criancas],
@@ -14,8 +16,9 @@ describe('Criancas', () => {
         {
           provide: CadastroServico,
           useValue: {
-            listar: () =>
-              Promise.resolve({
+            listar: (filtro: { status: string }) => {
+              ultimoFiltro = filtro;
+              return Promise.resolve({
                 itens: [
                   {
                     id: '1',
@@ -35,7 +38,8 @@ describe('Criancas', () => {
                   },
                 ],
                 total: 25,
-              }),
+              });
+            },
           },
         },
       ],
@@ -48,6 +52,7 @@ describe('Criancas', () => {
 
     const painel = fixture.nativeElement.querySelector('.painel-lista') as HTMLElement;
     expect(painel.querySelector('.busca')).toBeTruthy();
+    expect(ultimoFiltro?.status).toBe('ativo');
     expect(painel.querySelectorAll('.linha').length).toBe(2);
     expect(painel.textContent).toContain('0/10 documentos');
     expect(painel.textContent).toContain('3/7 documentos');
