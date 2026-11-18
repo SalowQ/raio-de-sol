@@ -22,6 +22,6 @@ O cadastro de crianças usa o campo `CampoParentesco`. Texto só com espaços é
 - Base legal, aviso de privacidade, prazos de retenção e procedimento de exclusão.
 - Turnos de atendimento. A presença futura usa uma sessão chamada `dia` até a ONG confirmar outro calendário.
 - Dias em que a criança era esperada. Sem esse calendário, a frequência mostra totais e não calcula percentual.
-- Validade inicial sugerida para links da família: 7 dias, configurável pelo funcionário.
-- Tamanho máximo sugerido por arquivo: 10 MB, nos tipos PDF, JPEG e PNG.
+- Validade inicial sugerida para links da família: 7 dias. A tela deixa o funcionário escolher de 1 a 30. Isso continua sendo sugestão, não regra do Instituto.
+- Tamanho máximo sugerido por arquivo: 10 MB, nos tipos PDF, JPEG e PNG. O envio agora também confere o conteúdo do arquivo. Há um limite técnico de 8 envios a cada 10 minutos e 30 envios por link, para evitar abuso. Não é regra do Instituto.
 - Cores e logotipo oficiais. A paleta atual é só uma escolha de interface.

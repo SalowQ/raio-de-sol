@@ -1,0 +1,163 @@
+<section class="painel-lista">
+  <div class="busca pedido">
+    <div class="topo">
+      <div>
+        <p class="olho">Famílias</p>
+        <h1>Cadastros pendentes</h1>
+      </div>
+    </div>
+    <h2>Novo link de cadastro</h2>
+    <p>
+      A validade sugerida é de 7 dias. Você pode escolher de 1 a 30. O link fica nesta lista enquanto
+      estiver ativo.
+    </p>
+    <div class="gerar">
+      <label class="dias">
+        Validade em dias
+        <input type="number" min="1" max="30" [value]="dias()" (input)="aoDigitarDias($event)" />
+      </label>
+      <button mat-flat-button color="primary" type="button" [disabled]="gerando()" (click)="gerar()">
+        {{ gerando() ? 'Gerando...' : 'Gerar link' }}
+      </button>
+    </div>
+    @if (linkGerado(); as link) {
+      <div class="link">
+        <p>Link gerado. Abra a linha correspondente para copiar de novo.</p>
+        <input readonly [value]="link" />
+        <button mat-button type="button" (click)="copiar(link)">Copiar</button>
+      </div>
+    }
+  </div>
+
+  <div class="corpo">
+    @if (erro(); as mensagem) {
+      <app-estado-erro [mensagem]="mensagem" />
+    }
+
+    @if (carregando()) {
+      <app-carregando rotulo="Carregando links" />
+    } @else if (itens().length === 0 && !erro()) {
+      <app-estado-vazio
+        titulo="Nenhum link de cadastro"
+        descricao="Gere um link e envie para a família. O cadastro só entra como ativo depois da sua aprovação."
+      />
+    } @else {
+      <ul class="lista">
+        @for (item of itens(); track item.id) {
+          <li>
+            <button
+              class="linha"
+              type="button"
+              [attr.aria-expanded]="aberto(item.id)"
+              (click)="alternar(item.id)"
+            >
+              <span class="marca" [class.aberta]="aberto(item.id)" aria-hidden="true"></span>
+              <span class="nome">Link de {{ item.criado_em | date: 'dd/MM/yyyy' }}</span>
+              <span class="etiquetas">
+                <span>{{ rotulo(item.status, false) }}</span>
+                <span>até {{ item.expira_em | date: 'dd/MM/yyyy' }}</span>
+                <span>{{ resumoCadastros(item) }}</span>
+              </span>
+            </button>
+
+            @if (aberto(item.id)) {
+              <div class="detalhe">
+                @if (endereco(item); as link) {
+                  <div class="link">
+                    <p>Link ativo</p>
+                    <input readonly [value]="link" />
+                    <button mat-button type="button" (click)="copiar(link)">Copiar</button>
+                  </div>
+                } @else if (!item.token && !item.revogado_em && item.status !== 'aprovado') {
+                  <p>Este link foi gerado antes de ser guardado. Gere outro para copiar o endereço.</p>
+                }
+
+                @if (!enviou(item)) {
+                  <p class="vazio-link">A família ainda não enviou um cadastro por este link.</p>
+                } @else {
+                  <article class="cadastro">
+                    <header class="cabecalho">
+                      <h3>{{ nome(item) }}</h3>
+                      <span class="etiquetas">
+                        <span>{{ rotulo(item.status, item.conferir_manualmente) }}</span>
+                      </span>
+                    </header>
+
+                    @if (item.conferir_manualmente) {
+                      <p class="aviso">
+                        Este envio precisa de conferência manual. O sistema não criou outro cadastro e
+                        não mostra se o CPF já existe.
+                      </p>
+                    }
+                    @if (item.observacao) {
+                      <p>Correção pedida: {{ item.observacao }}</p>
+                    }
+                    @if (item.dados; as dados) {
+                      <dl>
+                        <div>
+                          <dt>Responsável</dt>
+                          <dd>{{ dados.responsavel.nome }}</dd>
+                        </div>
+                        @if (dados.crianca.recebe_beneficio) {
+                          <div>
+                            <dt>Benefício</dt>
+                            <dd>{{ rotuloBeneficio(dados.crianca.recebe_beneficio) }}</dd>
+                          </div>
+                        }
+                      </dl>
+                    }
+                    @if (arquivos(item) > 0) {
+                      <p>
+                        {{ arquivos(item) }} arquivo(s) aguardando conferência, sem ligação automática.
+                      </p>
+                    }
+
+                    <div class="acoes">
+                      @if (item.crianca_id) {
+                        <a mat-stroked-button [routerLink]="['/criancas', item.crianca_id]">Abrir perfil</a>
+                      }
+                      @if (!item.conferir_manualmente && item.crianca_id && item.status !== 'aprovado' && !item.revogado_em) {
+                        <button mat-flat-button color="primary" type="button" (click)="aprovar(item.id)">
+                          Aprovar
+                        </button>
+                        <button mat-stroked-button type="button" (click)="iniciarCorrecao(item.id)">
+                          Pedir correção
+                        </button>
+                      }
+                      @if (!item.revogado_em && item.status !== 'aprovado') {
+                        <button mat-button type="button" (click)="revogar(item.id)">Revogar</button>
+                      }
+                    </div>
+
+                    @if (correcaoId() === item.id) {
+                      <div class="correcao">
+                        <label>
+                          O que a família deve corrigir
+                          <textarea
+                            rows="3"
+                            maxlength="500"
+                            [value]="observacao()"
+                            (input)="aoDigitarObservacao($event)"
+                          ></textarea>
+                        </label>
+                        <button mat-flat-button color="primary" type="button" (click)="pedirCorrecao(item.id)">
+                          Enviar pedido
+                        </button>
+                      </div>
+                    }
+                  </article>
+                }
+
+                @if (!enviou(item) && !item.revogado_em && item.status !== 'aprovado') {
+                  <div class="acoes">
+                    <button mat-button type="button" (click)="revogar(item.id)">Revogar</button>
+                  </div>
+                }
+              </div>
+            }
+          </li>
+        }
+      </ul>
+    }
+  </div>
+</section>

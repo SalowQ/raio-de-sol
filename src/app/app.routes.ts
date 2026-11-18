@@ -24,6 +24,18 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/portal-familia/portal-familia').then((m) => m.PortalFamilia),
       },
+      {
+        path: 'cadastro/:token',
+        title: 'Cadastro da família',
+        loadComponent: () =>
+          import('./features/familia/formulario-familia').then((m) => m.FormularioFamilia),
+      },
+      {
+        path: 'documentos/:token',
+        title: 'Documentos da família',
+        loadComponent: () =>
+          import('./features/familia/envio-documentos-familia').then((m) => m.EnvioDocumentosFamilia),
+      },
     ],
   },
   {

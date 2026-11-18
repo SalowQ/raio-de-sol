@@ -1,0 +1,156 @@
+<section class="cartao">
+  <p class="olho">Instituto Raio de Sol</p>
+  <h1>Cadastro da criança</h1>
+  <p class="nota">
+    Preencha o que souber. A equipe confere o envio antes de ativar o cadastro. Este link não abre o
+    painel nem mostra outros cadastros.
+  </p>
+
+  @if (carregando()) {
+    <app-carregando rotulo="Carregando o formulário" />
+  } @else if (recebido(); as mensagem) {
+    <p class="sucesso">{{ mensagem }}</p>
+    @if (erro(); as falha) {
+      <app-estado-erro [mensagem]="falha" />
+    }
+  } @else if (erro() && beneficios().length === 0 && tipos().length === 0) {
+    <app-estado-erro [mensagem]="erro()!" />
+  } @else {
+    @if (observacao(); as texto) {
+      <p class="correcao">A equipe pediu uma correção: {{ texto }}</p>
+    }
+    @if (erro(); as falha) {
+      <app-estado-erro [mensagem]="falha" />
+    }
+    <form class="grade" [formGroup]="formulario" (ngSubmit)="salvar()">
+      <h2>Criança</h2>
+      <mat-form-field appearance="outline">
+        <mat-label>Nome</mat-label>
+        <input matInput formControlName="nome" autocomplete="name" />
+        @if (enviado() && formulario.controls.nome.invalid) {
+          <mat-error>Informe o nome da criança.</mat-error>
+        }
+      </mat-form-field>
+      <div class="par">
+        <mat-form-field appearance="outline">
+          <mat-label>RG</mat-label>
+          <input matInput formControlName="rg" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Órgão emissor</mat-label>
+          <input matInput formControlName="orgaoEmissorRg" (input)="aoDigitarOrgao('orgaoEmissorRg', $event)" />
+        </mat-form-field>
+      </div>
+      <div class="par">
+        <mat-form-field appearance="outline">
+          <mat-label>CPF</mat-label>
+          <input matInput formControlName="cpf" inputmode="numeric" (input)="aoDigitarCpf('cpf', $event)" />
+          @if (enviado() && formulario.controls.cpf.invalid) {
+            <mat-error>O CPF deve ter 11 dígitos.</mat-error>
+          }
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Nascimento</mat-label>
+          <input matInput [matDatepicker]="nascimento" formControlName="dataNascimento" />
+          <mat-datepicker-toggle matIconSuffix [for]="nascimento" />
+          <mat-datepicker #nascimento />
+        </mat-form-field>
+      </div>
+
+      <h2>Responsável</h2>
+      <mat-form-field appearance="outline">
+        <mat-label>Nome</mat-label>
+        <input matInput formControlName="responsavelNome" autocomplete="name" />
+        @if (enviado() && formulario.controls.responsavelNome.invalid) {
+          <mat-error>Informe o nome do responsável.</mat-error>
+        }
+      </mat-form-field>
+      <app-campo-parentesco
+        [controle]="formulario.controls.parentesco"
+        [controleOutro]="formulario.controls.parentescoOutro"
+      />
+      <div class="par">
+        <mat-form-field appearance="outline">
+          <mat-label>RG</mat-label>
+          <input matInput formControlName="responsavelRg" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Órgão emissor</mat-label>
+          <input
+            matInput
+            formControlName="responsavelOrgaoEmissor"
+            (input)="aoDigitarOrgao('responsavelOrgaoEmissor', $event)"
+          />
+        </mat-form-field>
+      </div>
+      <div class="par">
+        <mat-form-field appearance="outline">
+          <mat-label>CPF</mat-label>
+          <input
+            matInput
+            formControlName="responsavelCpf"
+            inputmode="numeric"
+            (input)="aoDigitarCpf('responsavelCpf', $event)"
+          />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Telefone</mat-label>
+          <input matInput formControlName="telefone" inputmode="tel" (input)="aoDigitarTelefone($event)" />
+        </mat-form-field>
+      </div>
+      <mat-form-field appearance="outline">
+        <mat-label>E-mail</mat-label>
+        <input matInput type="email" formControlName="email" (input)="aoDigitarEmail($event)" />
+      </mat-form-field>
+
+      <h2>Benefício</h2>
+      <mat-form-field appearance="outline">
+        <mat-label>Situação</mat-label>
+        <mat-select formControlName="recebeBeneficio">
+          @for (opcao of situacoes; track opcao.valor) {
+            <mat-option [value]="opcao.valor">{{ opcao.rotulo }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      @if (formulario.controls.recebeBeneficio.value === 'recebe') {
+        <div class="beneficios">
+          @for (beneficio of beneficios(); track beneficio.id) {
+            <mat-checkbox
+              [checked]="beneficioMarcado(beneficio.id)"
+              (change)="alternarBeneficio(beneficio.id, $event.checked)"
+            >
+              {{ beneficio.nome }}
+            </mat-checkbox>
+          }
+        </div>
+        @if (enviado() && formulario.hasError('beneficioObrigatorio')) {
+          <p class="falha">Selecione ao menos um benefício.</p>
+        }
+      }
+
+      @if (tipos().length > 0) {
+        <h2>Documentos, se tiver em mãos</h2>
+        <p class="nota">PDF, JPEG ou PNG, até 10 MB. Esse tamanho continua sendo uma sugestão.</p>
+        <ul class="tipos">
+          @for (tipo of tipos(); track tipo.id) {
+            <li>
+              <span>{{ tipo.nome }}</span>
+              <label>
+                <input
+                  type="file"
+                  accept="application/pdf,image/jpeg,image/png"
+                  (change)="escolherArquivo(tipo.id, $event)"
+                />
+                {{ nomeArquivo(tipo.id) || 'Escolher arquivo' }}
+              </label>
+            </li>
+          }
+        </ul>
+      }
+
+      <button mat-flat-button color="primary" type="submit" [disabled]="salvando()">
+        {{ salvando() ? 'Enviando...' : 'Enviar cadastro' }}
+      </button>
+    </form>
+  }
+</section>

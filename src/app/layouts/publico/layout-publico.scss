@@ -20,8 +20,9 @@
 
 .pagina {
   min-height: 100%;
-  display: grid;
-  place-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
   padding: 1.5rem;
   background:
     radial-gradient(circle at 85% 0, var(--sol-brilho) 0, transparent 24%),

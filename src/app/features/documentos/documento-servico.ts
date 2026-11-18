@@ -9,7 +9,7 @@ import type {
 } from '../../models/documento';
 import { SupabaseCliente } from '../../core/services/supabase-cliente';
 import { mensagemServidorAusente } from '../criancas/regras-cadastro';
-import { mensagemDocumento, montarChecklist, validarArquivo } from './regras-documento';
+import { conteudoCompativel, mensagemDocumento, montarChecklist, validarArquivo } from './regras-documento';
 
 const DURACAO_URL = 60;
 
@@ -30,6 +30,11 @@ export class DocumentoServico {
     const invalido = validarArquivo(arquivo);
     if (invalido) {
       throw new Error(invalido);
+    }
+
+    const bytes = new Uint8Array(await arquivo.slice(0, 8).arrayBuffer());
+    if (!conteudoCompativel(arquivo.type, bytes)) {
+      throw new Error('O conteúdo do arquivo não corresponde a PDF, JPEG ou PNG.');
     }
 
     const cliente = this.cliente();

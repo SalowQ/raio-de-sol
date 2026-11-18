@@ -19,7 +19,7 @@ export class PainelServico {
     const [ativas, aguardandoValidacao, documentosEmAnalise, criancasComPendencia] =
       await Promise.all([
         this.contarCriancas(cliente, 'ativo'),
-        this.contarCriancas(cliente, 'pendente_validacao'),
+        this.contarSolicitacoes(cliente),
         this.contarDocumentosAguardando(cliente),
         this.contarCriancasComPendencia(cliente),
       ]);
@@ -40,6 +40,14 @@ export class PainelServico {
       .from('criancas')
       .select('id', { count: 'exact', head: true })
       .eq('status', status);
+    return this.total(count, error);
+  }
+
+  private async contarSolicitacoes(cliente: SupabaseClient): Promise<number> {
+    const { count, error } = await cliente
+      .from('solicitacoes_cadastro')
+      .select('id', { count: 'exact', head: true })
+      .in('status', ['enviado', 'correcao']);
     return this.total(count, error);
   }
 

@@ -1,0 +1,56 @@
+<section class="pedido">
+  <h2>Pedir documentos à família</h2>
+  <p>
+    O link sugerido vale 7 dias. Você pode escolher de 1 a 30. Ele só aceita os tipos marcados e não
+    mostra os arquivos que já estão aqui.
+  </p>
+  @if (erro(); as mensagem) {
+    <app-estado-erro [mensagem]="mensagem" />
+  }
+  <label class="dias">
+    Validade em dias
+    <input type="number" min="1" max="30" [value]="dias()" (input)="aoDigitarDias($event)" />
+  </label>
+  <ul>
+    @for (item of itens(); track item.tipo.id) {
+      <li>
+        <label>
+          <input
+            type="checkbox"
+            [checked]="marcado(item.tipo.id)"
+            (change)="alternarEvento(item.tipo.id, $event)"
+          />
+          {{ item.tipo.nome }}
+        </label>
+      </li>
+    }
+  </ul>
+  <button mat-stroked-button type="button" [disabled]="gerando()" (click)="gerar()">
+    {{ gerando() ? 'Gerando...' : 'Gerar link' }}
+  </button>
+  @if (gerado(); as link) {
+    <div class="link">
+      <p>Link gerado. Ele continua nesta lista enquanto estiver ativo.</p>
+      <input readonly [value]="link" />
+      <button mat-button type="button" (click)="copiar(link)">Copiar</button>
+    </div>
+  }
+  @if (linksAbertos().length > 0) {
+    <ul class="anteriores">
+      @for (link of linksAbertos(); track link.id) {
+        <li>
+          <span>{{ rotulo(link.status, false) }}</span>
+          @if (endereco(link); as endereco) {
+            <input readonly [value]="endereco" />
+            <button mat-button type="button" (click)="copiar(endereco)">Copiar</button>
+          } @else if (!link.token && !link.revogado_em && link.status !== 'encerrado') {
+            <span>Gere outro para copiar o endereço.</span>
+          }
+          @if (!link.revogado_em) {
+            <button mat-button type="button" (click)="revogar(link.id)">Revogar</button>
+          }
+        </li>
+      }
+    </ul>
+  }
+</section>

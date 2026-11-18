@@ -1,0 +1,40 @@
+<section class="cartao">
+  <p class="olho">Instituto Raio de Sol</p>
+  <h1>Envio de documentos</h1>
+  <p class="nota">
+    Envie só os documentos pedidos neste link. Ele não mostra arquivos que já estão no Instituto e não
+    abre o painel.
+  </p>
+
+  @if (carregando()) {
+    <app-carregando rotulo="Carregando os documentos" />
+  } @else if (erro() && tipos().length === 0) {
+    <app-estado-erro [mensagem]="erro()!" />
+  } @else {
+    @if (recebido() && !erro()) {
+      <p class="sucesso">Recebemos os arquivos. A equipe vai conferir.</p>
+    }
+    @if (erro(); as falha) {
+      <app-estado-erro [mensagem]="falha" />
+    }
+    <ul class="tipos">
+      @for (tipo of tipos(); track tipo.id) {
+        <li>
+          <span>{{ tipo.nome }}</span>
+          <label>
+            <input
+              type="file"
+              accept="application/pdf,image/jpeg,image/png"
+              (change)="escolherArquivo(tipo.id, $event)"
+            />
+            {{ nomeArquivo(tipo.id) || 'Escolher arquivo' }}
+          </label>
+        </li>
+      }
+    </ul>
+    <p class="nota">PDF, JPEG ou PNG, até 10 MB. Esse tamanho continua sendo uma sugestão.</p>
+    <button mat-flat-button color="primary" type="button" [disabled]="enviando()" (click)="enviar()">
+      {{ enviando() ? 'Enviando...' : 'Enviar documentos' }}
+    </button>
+  }
+</section>

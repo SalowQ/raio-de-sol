@@ -3,6 +3,7 @@ import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import type { ItemChecklist } from '../../models/documento';
 import { ChecklistCrianca } from './checklist-crianca';
 import { DocumentoServico } from './documento-servico';
+import { LinksServico } from '../familia/links-servico';
 
 const itens: ItemChecklist[] = [
   {
@@ -68,6 +69,10 @@ describe('ChecklistCrianca', () => {
       providers: [
         provideNoopAnimations(),
         { provide: DocumentoServico, useValue: { checklist: () => Promise.resolve(itens) } },
+        {
+          provide: LinksServico,
+          useValue: { listarDocumentos: () => Promise.resolve([]) },
+        },
       ],
     }).compileComponents();
 

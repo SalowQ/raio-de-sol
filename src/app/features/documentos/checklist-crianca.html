@@ -1,6 +1,7 @@
 <p class="nota">
   PDF, JPEG ou PNG, até 10 MB. Esse tamanho é uma sugestão e ainda não foi confirmado pelo Instituto.
-  Cada envio cria uma versão nova e a anterior permanece.
+  Cada envio cria uma versão nova e a anterior permanece. Arquivo vindo da família fica em quarentena
+  até a aprovação.
 </p>
 
 @if (erro(); as mensagem) {
@@ -10,6 +11,7 @@
 @if (carregando()) {
   <app-carregando rotulo="Carregando documentos" />
 } @else {
+  <app-pedido-familia [criancaId]="criancaId()" [itens]="itens()" />
   <section class="painel-lista">
     <ul class="lista">
       @for (item of itens(); track item.tipo.id) {

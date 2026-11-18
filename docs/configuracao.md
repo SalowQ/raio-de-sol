@@ -25,8 +25,11 @@ O script recusa chave de serviço e não grava o arquivo nesse caso.
 6. No SQL Editor, execute também [supabase/migrations/20261108160000_cadastros.sql](../supabase/migrations/20261108160000_cadastros.sql). Ele cria crianças, responsáveis, benefícios e as funções de gravação. Sem esse arquivo, a tela de crianças não consegue salvar.
 7. No SQL Editor, execute [supabase/migrations/20261108210000_orgao_emissor_contato.sql](../supabase/migrations/20261108210000_orgao_emissor_contato.sql). Ele acrescenta órgão emissor do RG, e-mail e telefone. Sem esse arquivo, salvar o cadastro novo falha.
 8. No SQL Editor, execute [supabase/migrations/20261116210000_documentos.sql](../supabase/migrations/20261116210000_documentos.sql). Ele cria o catálogo, as versões e o bucket privado `documentos`. Sem esse arquivo, o checklist não carrega e o envio falha.
-9. Em Authentication, crie o usuário do funcionário e confirme o e-mail por lá.
-10. No SQL Editor, vincule o perfil. Troque o identificador e o nome pelos da conta criada:
+9. No SQL Editor, execute [supabase/migrations/20261117120000_links_familia.sql](../supabase/migrations/20261117120000_links_familia.sql). Ele cria os links da família e a quarentena. Sem esse arquivo, o cadastro externo não abre.
+10. No SQL Editor, execute [supabase/migrations/20261118010000_link_visivel.sql](../supabase/migrations/20261118010000_link_visivel.sql). Ele guarda o link para reexibir na tela e libera a abertura do formulário com a chave pública. Sem esse arquivo, abrir o link da família falha.
+11. No SQL Editor, execute [supabase/migrations/20261118020000_upload_familia.sql](../supabase/migrations/20261118020000_upload_familia.sql). Ele libera o envio dos arquivos da família para a quarentena. Sem esse arquivo, o cadastro é gravado e os arquivos falham.
+12. Em Authentication, crie o usuário do funcionário e confirme o e-mail por lá.
+13. No SQL Editor, vincule o perfil. Troque o identificador e o nome pelos da conta criada:
 
 ```sql
 insert into public.perfis_usuarios (id, nome)
@@ -46,7 +49,7 @@ npx supabase start
 npx supabase db reset
 ```
 
-`db reset` aplica as migrations. Use a URL e a chave anon impressas pelo CLI no `.env`. Não copie a `service_role` para o frontend.
+`db reset` aplica as migrations. Use a URL e a chave anon impressas pelo CLI no `.env`. Não copie a `service_role` para o frontend. O envio da família usa o banco; não depende da função `familia`.
 
 ## O que esta etapa já protege
 

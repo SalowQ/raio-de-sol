@@ -65,8 +65,8 @@ export function montarIndicadores(contagens: ContagensPainel): IndicadorPainel[]
       rotulo: 'Cadastros aguardando validação',
       tom: 'lilas',
       valor: contagens.aguardandoValidacao,
-      caminho: '/criancas',
-      parametros: { situacao: 'pendente_validacao' },
+      caminho: '/cadastros-pendentes',
+      parametros: null,
     },
     {
       rotulo: 'Documentos aguardando análise',

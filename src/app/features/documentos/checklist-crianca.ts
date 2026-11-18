@@ -5,16 +5,19 @@ import { Carregando } from '../../shared/components/carregando/carregando';
 import { EstadoErro } from '../../shared/components/estado-erro/estado-erro';
 import { DocumentoServico } from './documento-servico';
 import { formatarQuando, rotuloVersao, versoesRecentes } from './regras-documento';
+import { PedidoFamilia } from '../familia/pedido-familia';
+import { LinksServico } from '../familia/links-servico';
 
 @Component({
   selector: 'app-checklist-crianca',
-  imports: [MatButtonModule, Carregando, EstadoErro],
+  imports: [MatButtonModule, Carregando, EstadoErro, PedidoFamilia],
   templateUrl: './checklist-crianca.html',
   styleUrl: './checklist-crianca.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChecklistCrianca {
   private readonly documentos = inject(DocumentoServico);
+  private readonly links = inject(LinksServico);
 
   readonly criancaId = input.required<string>();
   readonly itens = signal<ItemChecklist[]>([]);
@@ -100,16 +103,31 @@ export class ChecklistCrianca {
   ): Promise<void> {
     this.erro.set(null);
     try {
-      await this.documentos.definirStatus(
-        versaoId,
-        status,
-        status === 'rejeitado' ? this.observacao() : null,
-      );
+      const versao = this.versaoPorId(versaoId);
+      if (status === 'aprovado' && versao?.caminho.startsWith('quarentena/')) {
+        await this.links.promover(versaoId);
+      } else {
+        await this.documentos.definirStatus(
+          versaoId,
+          status,
+          status === 'rejeitado' ? this.observacao() : null,
+        );
+      }
       this.cancelarRejeicao();
       await this.carregar(this.criancaId());
     } catch (erro: unknown) {
       this.erro.set(textoDoErro(erro));
     }
+  }
+
+  private versaoPorId(id: string) {
+    for (const item of this.itens()) {
+      const versao = item.documento?.versoes.find((candidata) => candidata.id === id);
+      if (versao) {
+        return versao;
+      }
+    }
+    return null;
   }
 
   private async carregar(criancaId: string): Promise<void> {

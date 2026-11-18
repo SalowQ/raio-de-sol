@@ -31,7 +31,35 @@ const MENSAGENS_CONHECIDAS = [
   'O arquivo já foi guardado.',
   'Informe uma situação válida.',
   'A observação deve ter até 500 caracteres.',
+  'O conteúdo do arquivo não corresponde a PDF, JPEG ou PNG.',
+  'O arquivo ainda está na quarentena.',
 ];
+
+export function conteudoCompativel(mime: string, bytes: Uint8Array): boolean {
+  if (mime === 'application/pdf') {
+    return bytes.length >= 4 && bytes[0] === 0x25 && bytes[1] === 0x50 && bytes[2] === 0x44 && bytes[3] === 0x46;
+  }
+
+  if (mime === 'image/jpeg') {
+    return bytes.length >= 3 && bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff;
+  }
+
+  if (mime === 'image/png') {
+    return (
+      bytes.length >= 8 &&
+      bytes[0] === 0x89 &&
+      bytes[1] === 0x50 &&
+      bytes[2] === 0x4e &&
+      bytes[3] === 0x47 &&
+      bytes[4] === 0x0d &&
+      bytes[5] === 0x0a &&
+      bytes[6] === 0x1a &&
+      bytes[7] === 0x0a
+    );
+  }
+
+  return false;
+}
 
 export function validarArquivo(arquivo: { type: string; size: number }): string | null {
   if (!(arquivo.type in EXTENSAO_POR_MIME)) {

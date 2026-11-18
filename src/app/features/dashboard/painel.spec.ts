@@ -45,7 +45,7 @@ describe('Painel', () => {
     const links = [...fixture.nativeElement.querySelectorAll('a.cartao')] as HTMLAnchorElement[];
     expect(links.map((item) => item.getAttribute('href'))).toEqual([
       '/criancas?situacao=ativo',
-      '/criancas?situacao=pendente_validacao',
+      '/cadastros-pendentes',
     ]);
     expect(fixture.nativeElement.querySelectorAll('article.cartao').length).toBe(2);
   });
@@ -59,7 +59,7 @@ describe('Painel', () => {
     });
 
     expect(indicadores[0].caminho).toBe('/criancas');
-    expect(indicadores[1].parametros).toEqual({ situacao: 'pendente_validacao' });
+    expect(indicadores[1].caminho).toBe('/cadastros-pendentes');
     expect(indicadores[2].caminho).toBeNull();
     expect(indicadores[3].caminho).toBeNull();
   });
