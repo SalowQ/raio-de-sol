@@ -56,7 +56,10 @@
               <span class="etiquetas">
                 <span>{{ rotuloLink(item) }}</span>
                 <span>até {{ item.expira_em | date: 'dd/MM/yyyy' }}</span>
-                <span>{{ resumoCadastros(item) }}</span>
+                @let totais = contagem(item);
+                <span class="pendente">{{ quantidade(totais.pendentes, 'pendente', 'pendentes') }}</span>
+                <span class="aprovado">{{ quantidade(totais.aprovados, 'aprovado', 'aprovados') }}</span>
+                <span class="reprovado">{{ quantidade(totais.reprovados, 'reprovado', 'reprovados') }}</span>
               </span>
             </button>
 

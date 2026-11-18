@@ -60,12 +60,22 @@ export class CadastrosPendentes implements OnInit {
     });
   }
 
-  resumoCadastros(item: LinkCadastroLista): string {
-    const quantidade = item.cadastros.length;
-    if (quantidade === 0) {
-      return 'Nenhum cadastro';
+  contagem(item: LinkCadastroLista): ContagemCadastros {
+    const totais = { pendentes: 0, aprovados: 0, reprovados: 0 };
+    for (const cadastro of item.cadastros) {
+      if (cadastro.status === 'aprovado') {
+        totais.aprovados += 1;
+      } else if (cadastro.status === 'reprovado') {
+        totais.reprovados += 1;
+      } else {
+        totais.pendentes += 1;
+      }
     }
-    return quantidade === 1 ? '1 cadastro' : `${quantidade} cadastros`;
+    return totais;
+  }
+
+  quantidade(valor: number, um: string, varios: string): string {
+    return `${valor} ${valor === 1 ? um : varios}`;
   }
 
   rotuloLink(item: LinkCadastroLista): string {
@@ -168,4 +178,10 @@ export class CadastrosPendentes implements OnInit {
 
 function texto(erro: unknown): string {
   return erro instanceof Error ? erro.message : 'Não foi possível concluir a operação. Tente novamente.';
+}
+
+interface ContagemCadastros {
+  pendentes: number;
+  aprovados: number;
+  reprovados: number;
 }

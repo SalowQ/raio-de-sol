@@ -103,6 +103,21 @@ textarea {
   background: var(--sol-acento-suave);
 }
 
+.etiquetas span.pendente {
+  background: var(--sol-manteiga);
+  color: var(--sol-texto-pendente);
+}
+
+.etiquetas span.aprovado {
+  background: var(--sol-menta);
+  color: var(--sol-texto-ativo);
+}
+
+.etiquetas span.reprovado {
+  background: var(--sol-fundo-inativo);
+  color: var(--sol-suave);
+}
+
 button.linha {
   width: 100%;
   border: 0;

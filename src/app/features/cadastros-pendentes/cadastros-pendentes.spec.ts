@@ -75,7 +75,9 @@ describe('CadastrosPendentes', () => {
 
     const fechado = fixture.nativeElement.textContent as string;
     expect(fechado).toContain('Link de');
-    expect(fechado).toContain('2 cadastros');
+    expect(fechado).toContain('2 pendentes');
+    expect(fechado).toContain('0 aprovados');
+    expect(fechado).toContain('0 reprovados');
     expect(fechado).not.toContain('Aprovar');
     expect(fechado).not.toContain('Outra Criança');
 
