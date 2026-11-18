@@ -12,10 +12,8 @@ export interface LinkCriado {
   expira_em: string;
 }
 
-export interface SolicitacaoCadastroLista {
+export interface CadastroDoLink {
   id: string;
-  expira_em: string;
-  revogado_em: string | null;
   criado_em: string;
   status: string;
   crianca_id: string | null;
@@ -24,7 +22,15 @@ export interface SolicitacaoCadastroLista {
   dados: DadosCadastro | null;
   criancas: { nome: string } | null;
   arquivos_quarentena: { id: string; caminho: string; nome_arquivo: string }[];
+}
+
+export interface LinkCadastroLista {
+  id: string;
+  expira_em: string;
+  revogado_em: string | null;
+  criado_em: string;
   token: string | null;
+  cadastros: CadastroDoLink[];
 }
 
 export interface LinkDocumentoLista {
@@ -56,13 +62,16 @@ export class LinksServico {
     await this.rpc('revogar_link_familia', { p_id: id, p_finalidade: finalidade });
   }
 
-  async listarCadastros(): Promise<SolicitacaoCadastroLista[]> {
+  async listarCadastros(): Promise<LinkCadastroLista[]> {
     const cliente = this.cliente();
     const { data, error } = await cliente
-      .from('solicitacoes_cadastro')
+      .from('links_cadastro')
       .select(
-        `id, expira_em, revogado_em, criado_em, status, crianca_id, conferir_manualmente, observacao, dados, token,
-         criancas (nome), arquivos_quarentena (id, caminho, nome_arquivo)`,
+        `id, expira_em, revogado_em, criado_em, token,
+         solicitacoes_cadastro (
+           id, criado_em, status, crianca_id, conferir_manualmente, observacao, dados,
+           criancas (nome), arquivos_quarentena (id, caminho, nome_arquivo)
+         )`,
       )
       .order('criado_em', { ascending: false })
       .limit(50);
@@ -71,7 +80,7 @@ export class LinksServico {
       throw new Error(mensagemLink(error.message));
     }
 
-    return ((data ?? []) as unknown[]).map((linha) => normalizarSolicitacao(linha));
+    return ((data ?? []) as unknown[]).map((linha) => normalizarLink(linha));
   }
 
   async listarDocumentos(criancaId: string): Promise<LinkDocumentoLista[]> {
@@ -184,8 +193,27 @@ export class LinksServico {
   }
 }
 
-function normalizarSolicitacao(linha: unknown): SolicitacaoCadastroLista {
-  const item = linha as SolicitacaoCadastroLista & {
+function normalizarLink(linha: unknown): LinkCadastroLista {
+  const item = linha as LinkCadastroLista & {
+    solicitacoes_cadastro?: unknown[] | null;
+  };
+  const cadastros = (item.solicitacoes_cadastro ?? [])
+    .map((cadastro) => normalizarCadastro(cadastro))
+    .filter((cadastro) => cadastro.status !== 'aberto' || !!cadastro.crianca_id || !!cadastro.dados)
+    .sort((primeiro, segundo) => segundo.criado_em.localeCompare(primeiro.criado_em));
+
+  return {
+    id: item.id,
+    expira_em: item.expira_em,
+    revogado_em: item.revogado_em,
+    criado_em: item.criado_em,
+    token: item.token ?? null,
+    cadastros,
+  };
+}
+
+function normalizarCadastro(linha: unknown): CadastroDoLink {
+  const item = linha as CadastroDoLink & {
     criancas?: { nome: string } | { nome: string }[] | null;
   };
   const crianca = Array.isArray(item.criancas) ? (item.criancas[0] ?? null) : (item.criancas ?? null);
@@ -193,6 +221,5 @@ function normalizarSolicitacao(linha: unknown): SolicitacaoCadastroLista {
     ...item,
     criancas: crianca,
     arquivos_quarentena: item.arquivos_quarentena ?? [],
-    token: item.token ?? null,
   };
 }

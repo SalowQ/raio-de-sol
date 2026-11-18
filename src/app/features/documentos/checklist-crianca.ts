@@ -5,12 +5,11 @@ import { Carregando } from '../../shared/components/carregando/carregando';
 import { EstadoErro } from '../../shared/components/estado-erro/estado-erro';
 import { DocumentoServico } from './documento-servico';
 import { formatarQuando, rotuloVersao, versoesRecentes } from './regras-documento';
-import { PedidoFamilia } from '../familia/pedido-familia';
 import { LinksServico } from '../familia/links-servico';
 
 @Component({
   selector: 'app-checklist-crianca',
-  imports: [MatButtonModule, Carregando, EstadoErro, PedidoFamilia],
+  imports: [MatButtonModule, Carregando, EstadoErro],
   templateUrl: './checklist-crianca.html',
   styleUrl: './checklist-crianca.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

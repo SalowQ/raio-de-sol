@@ -28,8 +28,10 @@ O script recusa chave de serviço e não grava o arquivo nesse caso.
 9. No SQL Editor, execute [supabase/migrations/20261117120000_links_familia.sql](../supabase/migrations/20261117120000_links_familia.sql). Ele cria os links da família e a quarentena. Sem esse arquivo, o cadastro externo não abre.
 10. No SQL Editor, execute [supabase/migrations/20261118010000_link_visivel.sql](../supabase/migrations/20261118010000_link_visivel.sql). Ele guarda o link para reexibir na tela e libera a abertura do formulário com a chave pública. Sem esse arquivo, abrir o link da família falha.
 11. No SQL Editor, execute [supabase/migrations/20261118020000_upload_familia.sql](../supabase/migrations/20261118020000_upload_familia.sql). Ele libera o envio dos arquivos da família para a quarentena. Sem esse arquivo, o cadastro é gravado e os arquivos falham.
-12. Em Authentication, crie o usuário do funcionário e confirme o e-mail por lá.
-13. No SQL Editor, vincule o perfil. Troque o identificador e o nome pelos da conta criada:
+12. No SQL Editor, execute [supabase/migrations/20261118030000_link_geral.sql](../supabase/migrations/20261118030000_link_geral.sql). Ele separa o link dos cadastros, para várias famílias usarem o mesmo endereço. Sem esse arquivo, um novo envio no mesmo link altera o cadastro anterior.
+13. No SQL Editor, execute [supabase/migrations/20261118040000_documentos_cadastro_externo.sql](../supabase/migrations/20261118040000_documentos_cadastro_externo.sql). Ele devolve o envio de PDF, JPEG e PNG no cadastro da família e liga cada arquivo ao envio certo. Sem esse arquivo, o formulário pode mostrar os documentos, mas o envio falha.
+14. Em Authentication, crie o usuário do funcionário e confirme o e-mail por lá.
+15. No SQL Editor, vincule o perfil. Troque o identificador e o nome pelos da conta criada:
 
 ```sql
 insert into public.perfis_usuarios (id, nome)

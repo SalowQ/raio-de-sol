@@ -78,6 +78,10 @@ export function respostaConsultaPublica(entrada: Record<string, unknown>): Recor
 }
 
 export function mensagemLink(texto: string | undefined): string {
+  if (texto?.includes('links_cadastro')) {
+    return 'Aplique o SQL novo do link geral de cadastro no Supabase e tente de novo.';
+  }
+
   if (
     texto?.includes('reservar_arquivo_familia') ||
     texto?.includes('confirmar_arquivo_familia') ||

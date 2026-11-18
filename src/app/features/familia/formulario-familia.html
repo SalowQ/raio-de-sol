@@ -2,8 +2,8 @@
   <p class="olho">Instituto Raio de Sol</p>
   <h1>Cadastro da criança</h1>
   <p class="nota">
-    Preencha o que souber. A equipe confere o envio antes de ativar o cadastro. Este link não abre o
-    painel nem mostra outros cadastros.
+    Preencha o que souber. A equipe confere o envio antes de ativar o cadastro. Este endereço pode ser
+    usado por várias famílias: cada envio cria um cadastro novo e não mostra os anteriores.
   </p>
 
   @if (carregando()) {
@@ -16,9 +16,6 @@
   } @else if (erro() && beneficios().length === 0 && tipos().length === 0) {
     <app-estado-erro [mensagem]="erro()!" />
   } @else {
-    @if (observacao(); as texto) {
-      <p class="correcao">A equipe pediu uma correção: {{ texto }}</p>
-    }
     @if (erro(); as falha) {
       <app-estado-erro [mensagem]="falha" />
     }
@@ -135,13 +132,14 @@
           @for (tipo of tipos(); track tipo.id) {
             <li>
               <span>{{ tipo.nome }}</span>
-              <label>
+              <label class="escolha">
                 <input
+                  class="entrada"
                   type="file"
                   accept="application/pdf,image/jpeg,image/png"
                   (change)="escolherArquivo(tipo.id, $event)"
                 />
-                {{ nomeArquivo(tipo.id) || 'Escolher arquivo' }}
+                <span>{{ nomeArquivo(tipo.id) || 'Escolher arquivo' }}</span>
               </label>
             </li>
           }

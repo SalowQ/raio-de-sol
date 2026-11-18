@@ -10,16 +10,15 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import type { DadosCadastro, SituacaoBeneficio } from '../../models/cadastro';
+import type { SituacaoBeneficio } from '../../models/cadastro';
 import { CampoParentesco } from '../../shared/components/campo-parentesco/campo-parentesco';
 import { Carregando } from '../../shared/components/carregando/carregando';
 import { EstadoErro } from '../../shared/components/estado-erro/estado-erro';
-import { criarControleParentesco, separarParentesco } from '../../shared/validators/parentesco';
+import { criarControleParentesco } from '../../shared/validators/parentesco';
 import {
   beneficiosCompativeis,
   cpfOpcional,
   emailOpcional,
-  isoParaData,
   mascararCpf,
   mascararEmail,
   mascararOrgaoEmissor,
@@ -62,7 +61,6 @@ export class FormularioFamilia implements OnInit {
   readonly enviado = signal(false);
   readonly erro = signal<string | null>(null);
   readonly recebido = signal<string | null>(null);
-  readonly observacao = signal<string | null>(null);
   readonly beneficios = signal<BeneficioLink[]>([]);
   readonly tipos = signal<TipoLink[]>([]);
   readonly arquivos = signal<ReadonlyMap<string, File>>(new Map());
@@ -156,9 +154,9 @@ export class FormularioFamilia implements OnInit {
         status: 'pendente_validacao',
         observacoes: null,
       });
-      const mensagem = await this.familia.enviarCadastro(this.token, dados);
-      const falhas = await this.enviarArquivos();
-      this.recebido.set(mensagem);
+      const resultado = await this.familia.enviarCadastro(this.token, dados);
+      const falhas = await this.enviarArquivos(resultado.solicitacaoId);
+      this.recebido.set(resultado.mensagem);
       if (falhas.length > 0) {
         this.erro.set(falhas.join(' '));
       }
@@ -179,10 +177,6 @@ export class FormularioFamilia implements OnInit {
       }
       this.beneficios.set(consulta.beneficios ?? []);
       this.tipos.set(consulta.tipos ?? []);
-      this.observacao.set(consulta.observacao ?? null);
-      if (consulta.dados) {
-        this.preencher(consulta.dados);
-      }
       this.erro.set(null);
     } catch (erro: unknown) {
       this.erro.set(erro instanceof Error ? erro.message : 'Não foi possível concluir a operação. Tente novamente.');
@@ -191,33 +185,12 @@ export class FormularioFamilia implements OnInit {
     }
   }
 
-  private preencher(dados: DadosCadastro): void {
-    const parentesco = separarParentesco(dados.responsavel.parentesco);
-    this.formulario.patchValue({
-      nome: dados.crianca.nome,
-      rg: dados.crianca.rg ?? '',
-      orgaoEmissorRg: dados.crianca.orgao_emissor_rg ?? '',
-      cpf: dados.crianca.cpf ? mascararCpf(dados.crianca.cpf) : '',
-      dataNascimento: isoParaData(dados.crianca.data_nascimento),
-      recebeBeneficio: dados.crianca.recebe_beneficio,
-      responsavelNome: dados.responsavel.nome,
-      responsavelRg: dados.responsavel.rg ?? '',
-      responsavelOrgaoEmissor: dados.responsavel.orgao_emissor_rg ?? '',
-      responsavelCpf: dados.responsavel.cpf ? mascararCpf(dados.responsavel.cpf) : '',
-      email: dados.responsavel.email ?? '',
-      telefone: dados.responsavel.telefone ? mascararTelefone(dados.responsavel.telefone) : '',
-      parentesco: parentesco.opcao,
-      parentescoOutro: parentesco.outro,
-      beneficios: dados.beneficios,
-    });
-  }
-
-  private async enviarArquivos(): Promise<string[]> {
+  private async enviarArquivos(solicitacaoId: string | null): Promise<string[]> {
     const falhas: string[] = [];
     for (const [tipoId, arquivo] of this.arquivos()) {
       const tipo = this.tipos().find((item) => item.id === tipoId);
       try {
-        await this.familia.enviarArquivo(this.token, 'cadastro', tipoId, arquivo);
+        await this.familia.enviarArquivo(this.token, 'cadastro', tipoId, arquivo, solicitacaoId);
       } catch (erro: unknown) {
         const mensagem = erro instanceof Error ? erro.message : 'Não foi possível concluir a operação. Tente novamente.';
         falhas.push(`${tipo?.nome ?? 'Documento'}: ${mensagem}`);

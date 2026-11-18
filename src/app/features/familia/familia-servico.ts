@@ -41,15 +41,19 @@ export class FamiliaServico {
     return respostaConsultaPublica((data ?? {}) as Record<string, unknown>) as unknown as ConsultaLink;
   }
 
-  async enviarCadastro(token: string, dados: DadosCadastro): Promise<string> {
-    const { error } = await this.cliente().rpc('receber_cadastro_familia', {
+  async enviarCadastro(token: string, dados: DadosCadastro): Promise<{ mensagem: string; solicitacaoId: string | null }> {
+    const { data, error } = await this.cliente().rpc('receber_cadastro_familia', {
       p_token: token,
       p_dados: dados,
     });
     if (error) {
       throw new Error(mensagemLink(error.message));
     }
-    return 'Recebemos o envio. A equipe do Instituto vai conferir.';
+    const corpo = (data ?? {}) as { solicitacao_id?: string };
+    return {
+      mensagem: 'Recebemos o envio. A equipe do Instituto vai conferir.',
+      solicitacaoId: corpo.solicitacao_id ?? null,
+    };
   }
 
   async enviarArquivo(
@@ -57,6 +61,7 @@ export class FamiliaServico {
     finalidade: 'cadastro' | 'documentos',
     tipoId: string,
     arquivo: File,
+    solicitacaoId: string | null = null,
   ): Promise<void> {
     const invalido = validarArquivo(arquivo);
     if (invalido) {
@@ -68,12 +73,17 @@ export class FamiliaServico {
       throw new Error('O conteúdo do arquivo não corresponde a PDF, JPEG ou PNG.');
     }
 
+    if (finalidade === 'cadastro' && !solicitacaoId) {
+      throw new Error('Aplique o SQL novo do envio de arquivos da família no Supabase e tente de novo.');
+    }
+
     const cliente = this.cliente();
     const { data, error } = await cliente.rpc('reservar_arquivo_familia', {
       p_token: token,
       p_finalidade: finalidade,
       p_tipo: tipoId,
       p_mime: arquivo.type,
+      p_solicitacao: solicitacaoId,
     });
     const caminho = (data as { caminho?: string } | null)?.caminho;
     if (error || !caminho) {
@@ -96,6 +106,7 @@ export class FamiliaServico {
       p_nome: arquivo.name,
       p_mime: arquivo.type,
       p_tamanho: arquivo.size,
+      p_solicitacao: solicitacaoId,
     });
     if (confirmacao.error) {
       throw new Error(mensagemLink(confirmacao.error.message));

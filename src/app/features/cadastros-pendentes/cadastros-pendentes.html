@@ -6,10 +6,10 @@
         <h1>Cadastros pendentes</h1>
       </div>
     </div>
-    <h2>Novo link de cadastro</h2>
+    <h2>Link de cadastro</h2>
     <p>
-      A validade sugerida é de 7 dias. Você pode escolher de 1 a 30. O link fica nesta lista enquanto
-      estiver ativo.
+      Várias famílias podem usar o mesmo endereço. Cada envio cria um cadastro separado, e reabrir o
+      link mostra um formulário vazio. A validade sugerida é de 7 dias. Você pode escolher de 1 a 30.
     </p>
     <div class="gerar">
       <label class="dias">
@@ -39,7 +39,7 @@
     } @else if (itens().length === 0 && !erro()) {
       <app-estado-vazio
         titulo="Nenhum link de cadastro"
-        descricao="Gere um link e envie para a família. O cadastro só entra como ativo depois da sua aprovação."
+        descricao="Gere um link e compartilhe com as famílias. Cada envio entra como pendente e só fica ativo depois da sua aprovação."
       />
     } @else {
       <ul class="lista">
@@ -54,7 +54,7 @@
               <span class="marca" [class.aberta]="aberto(item.id)" aria-hidden="true"></span>
               <span class="nome">Link de {{ item.criado_em | date: 'dd/MM/yyyy' }}</span>
               <span class="etiquetas">
-                <span>{{ rotulo(item.status, false) }}</span>
+                <span>{{ rotuloLink(item) }}</span>
                 <span>até {{ item.expira_em | date: 'dd/MM/yyyy' }}</span>
                 <span>{{ resumoCadastros(item) }}</span>
               </span>
@@ -68,89 +68,65 @@
                     <input readonly [value]="link" />
                     <button mat-button type="button" (click)="copiar(link)">Copiar</button>
                   </div>
-                } @else if (!item.token && !item.revogado_em && item.status !== 'aprovado') {
+                } @else if (!item.token && !item.revogado_em) {
                   <p>Este link foi gerado antes de ser guardado. Gere outro para copiar o endereço.</p>
                 }
 
-                @if (!enviou(item)) {
-                  <p class="vazio-link">A família ainda não enviou um cadastro por este link.</p>
+                @if (item.cadastros.length === 0) {
+                  <p class="vazio-link">Nenhuma família enviou um cadastro por este link.</p>
                 } @else {
-                  <article class="cadastro">
-                    <header class="cabecalho">
-                      <h3>{{ nome(item) }}</h3>
-                      <span class="etiquetas">
-                        <span>{{ rotulo(item.status, item.conferir_manualmente) }}</span>
-                      </span>
-                    </header>
+                  @for (cadastro of item.cadastros; track cadastro.id) {
+                    <article class="cadastro">
+                      <header class="cabecalho">
+                        <h3>{{ nome(cadastro) }}</h3>
+                        <span class="etiquetas">
+                          <span>{{ rotulo(cadastro.status, cadastro.conferir_manualmente) }}</span>
+                        </span>
+                      </header>
 
-                    @if (item.conferir_manualmente) {
-                      <p class="aviso">
-                        Este envio precisa de conferência manual. O sistema não criou outro cadastro e
-                        não mostra se o CPF já existe.
-                      </p>
-                    }
-                    @if (item.observacao) {
-                      <p>Correção pedida: {{ item.observacao }}</p>
-                    }
-                    @if (item.dados; as dados) {
-                      <dl>
-                        <div>
-                          <dt>Responsável</dt>
-                          <dd>{{ dados.responsavel.nome }}</dd>
-                        </div>
-                        @if (dados.crianca.recebe_beneficio) {
+                      @if (cadastro.conferir_manualmente) {
+                        <p class="aviso">
+                          Este envio precisa de conferência manual. O sistema não criou outro cadastro e
+                          não mostra se o CPF já existe.
+                        </p>
+                      }
+                      @if (cadastro.dados; as dados) {
+                        <dl>
                           <div>
-                            <dt>Benefício</dt>
-                            <dd>{{ rotuloBeneficio(dados.crianca.recebe_beneficio) }}</dd>
+                            <dt>Responsável</dt>
+                            <dd>{{ dados.responsavel.nome }}</dd>
                           </div>
+                          @if (dados.crianca.recebe_beneficio) {
+                            <div>
+                              <dt>Benefício</dt>
+                              <dd>{{ rotuloBeneficio(dados.crianca.recebe_beneficio) }}</dd>
+                            </div>
+                          }
+                        </dl>
+                      }
+                      @if (arquivos(cadastro) > 0) {
+                        <p>
+                          {{ arquivos(cadastro) }} arquivo(s) aguardando conferência, sem ligação automática.
+                        </p>
+                      }
+
+                      <div class="acoes">
+                        @if (cadastro.crianca_id) {
+                          <a mat-stroked-button [routerLink]="['/criancas', cadastro.crianca_id]">Abrir perfil</a>
                         }
-                      </dl>
-                    }
-                    @if (arquivos(item) > 0) {
-                      <p>
-                        {{ arquivos(item) }} arquivo(s) aguardando conferência, sem ligação automática.
-                      </p>
-                    }
-
-                    <div class="acoes">
-                      @if (item.crianca_id) {
-                        <a mat-stroked-button [routerLink]="['/criancas', item.crianca_id]">Abrir perfil</a>
-                      }
-                      @if (!item.conferir_manualmente && item.crianca_id && item.status !== 'aprovado' && !item.revogado_em) {
-                        <button mat-flat-button color="primary" type="button" (click)="aprovar(item.id)">
-                          Aprovar
-                        </button>
-                        <button mat-stroked-button type="button" (click)="iniciarCorrecao(item.id)">
-                          Pedir correção
-                        </button>
-                      }
-                      @if (!item.revogado_em && item.status !== 'aprovado') {
-                        <button mat-button type="button" (click)="revogar(item.id)">Revogar</button>
-                      }
-                    </div>
-
-                    @if (correcaoId() === item.id) {
-                      <div class="correcao">
-                        <label>
-                          O que a família deve corrigir
-                          <textarea
-                            rows="3"
-                            maxlength="500"
-                            [value]="observacao()"
-                            (input)="aoDigitarObservacao($event)"
-                          ></textarea>
-                        </label>
-                        <button mat-flat-button color="primary" type="button" (click)="pedirCorrecao(item.id)">
-                          Enviar pedido
-                        </button>
+                        @if (!cadastro.conferir_manualmente && cadastro.crianca_id && cadastro.status !== 'aprovado') {
+                          <button mat-flat-button color="primary" type="button" (click)="aprovar(cadastro.id)">
+                            Aprovar
+                          </button>
+                        }
                       </div>
-                    }
-                  </article>
+                    </article>
+                  }
                 }
 
-                @if (!enviou(item) && !item.revogado_em && item.status !== 'aprovado') {
+                @if (!item.revogado_em) {
                   <div class="acoes">
-                    <button mat-button type="button" (click)="revogar(item.id)">Revogar</button>
+                    <button mat-button type="button" (click)="revogar(item.id)">Revogar link</button>
                   </div>
                 }
               </div>

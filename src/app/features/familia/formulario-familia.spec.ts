@@ -54,7 +54,10 @@ describe('FormularioFamilia', () => {
         }),
       enviarCadastro: () => {
         enviados += 1;
-        return Promise.resolve('Recebemos o envio. A equipe do Instituto vai conferir.');
+        return Promise.resolve({
+          mensagem: 'Recebemos o envio. A equipe do Instituto vai conferir.',
+          solicitacaoId: 'solicitacao-1',
+        });
       },
     });
 

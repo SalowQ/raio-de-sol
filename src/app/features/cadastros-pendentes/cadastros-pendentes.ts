@@ -5,7 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { Carregando } from '../../shared/components/carregando/carregando';
 import { EstadoErro } from '../../shared/components/estado-erro/estado-erro';
 import { EstadoVazio } from '../../shared/components/estado-vazio/estado-vazio';
-import { LinksServico, type SolicitacaoCadastroLista } from '../familia/links-servico';
+import { LinksServico, type CadastroDoLink, type LinkCadastroLista } from '../familia/links-servico';
 import { rotuloBeneficio } from '../criancas/regras-cadastro';
 import {
   enderecoLinkAtivo,
@@ -30,10 +30,8 @@ export class CadastrosPendentes implements OnInit {
   readonly erro = signal<string | null>(null);
   readonly dias = signal(VALIDADE_SUGERIDA_DIAS);
   readonly linkGerado = signal<string | null>(null);
-  readonly itens = signal<SolicitacaoCadastroLista[]>([]);
+  readonly itens = signal<LinkCadastroLista[]>([]);
   readonly abertos = signal<ReadonlySet<string>>(new Set());
-  readonly correcaoId = signal<string | null>(null);
-  readonly observacao = signal('');
   readonly rotulo = rotuloSolicitacao;
   readonly rotuloBeneficio = rotuloBeneficio;
 
@@ -44,10 +42,6 @@ export class CadastrosPendentes implements OnInit {
   aoDigitarDias(evento: Event): void {
     const valor = Number((evento.target as HTMLInputElement).value);
     this.dias.set(Number.isNaN(valor) ? 0 : valor);
-  }
-
-  aoDigitarObservacao(evento: Event): void {
-    this.observacao.set((evento.target as HTMLTextAreaElement).value);
   }
 
   aberto(id: string): boolean {
@@ -66,19 +60,29 @@ export class CadastrosPendentes implements OnInit {
     });
   }
 
-  enviou(item: SolicitacaoCadastroLista): boolean {
-    return item.status !== 'aberto' || !!item.crianca_id || !!item.dados;
+  resumoCadastros(item: LinkCadastroLista): string {
+    const quantidade = item.cadastros.length;
+    if (quantidade === 0) {
+      return 'Nenhum cadastro';
+    }
+    return quantidade === 1 ? '1 cadastro' : `${quantidade} cadastros`;
   }
 
-  resumoCadastros(item: SolicitacaoCadastroLista): string {
-    return this.enviou(item) ? '1 cadastro' : 'Nenhum cadastro';
+  rotuloLink(item: LinkCadastroLista): string {
+    if (item.revogado_em) {
+      return 'Revogado';
+    }
+    if (new Date(item.expira_em).getTime() <= Date.now()) {
+      return 'Expirado';
+    }
+    return 'Aberto';
   }
 
-  arquivos(item: SolicitacaoCadastroLista): number {
+  arquivos(item: CadastroDoLink): number {
     return item.arquivos_quarentena?.length ?? 0;
   }
 
-  nome(item: SolicitacaoCadastroLista): string {
+  nome(item: CadastroDoLink): string {
     const crianca = item.criancas as { nome?: string } | { nome?: string }[] | null;
     const ligado = Array.isArray(crianca) ? crianca[0]?.nome : crianca?.nome;
     if (ligado) {
@@ -87,7 +91,7 @@ export class CadastrosPendentes implements OnInit {
     return item.dados?.crianca.nome || 'Envio sem cadastro';
   }
 
-  endereco(item: SolicitacaoCadastroLista): string | null {
+  endereco(item: LinkCadastroLista): string | null {
     return enderecoLinkAtivo(
       location.origin,
       'cadastro',
@@ -95,7 +99,7 @@ export class CadastrosPendentes implements OnInit {
         token: item.token,
         expiraEm: item.expira_em,
         revogadoEm: item.revogado_em,
-        status: item.status,
+        status: 'aberto',
       },
       new Date(),
     );
@@ -134,22 +138,6 @@ export class CadastrosPendentes implements OnInit {
     } catch (erro: unknown) {
       this.erro.set(texto(erro));
       await this.carregar(true);
-    }
-  }
-
-  iniciarCorrecao(id: string): void {
-    this.correcaoId.set(id);
-    this.observacao.set('');
-  }
-
-  async pedirCorrecao(id: string): Promise<void> {
-    this.erro.set(null);
-    try {
-      await this.links.pedirCorrecao(id, this.observacao());
-      this.correcaoId.set(null);
-      await this.carregar();
-    } catch (erro: unknown) {
-      this.erro.set(texto(erro));
     }
   }
 

@@ -21,35 +21,46 @@ describe('CadastrosPendentes', () => {
             listarCadastros: () =>
               Promise.resolve([
                 {
-                  id: 'manual',
+                  id: 'link-ativo',
                   expira_em: '2099-11-20T12:00:00.000Z',
                   revogado_em: null,
                   criado_em: '2026-11-17T12:00:00.000Z',
-                  status: 'enviado',
-                  crianca_id: null,
-                  conferir_manualmente: true,
-                  observacao: null,
-                  token: null,
-                  dados: {
-                    crianca: { nome: 'Criança Exemplo' },
-                    responsavel: { nome: 'Responsável Exemplo' },
-                  },
-                  criancas: null,
-                  arquivos_quarentena: [],
+                  token: 'abc123',
+                  cadastros: [
+                    {
+                      id: 'manual',
+                      criado_em: '2026-11-17T13:00:00.000Z',
+                      status: 'enviado',
+                      crianca_id: null,
+                      conferir_manualmente: true,
+                      observacao: null,
+                      dados: {
+                        crianca: { nome: 'Criança Exemplo' },
+                        responsavel: { nome: 'Responsável Exemplo' },
+                      },
+                      criancas: null,
+                      arquivos_quarentena: [],
+                    },
+                    {
+                      id: 'nova',
+                      criado_em: '2026-11-17T12:00:00.000Z',
+                      status: 'enviado',
+                      crianca_id: 'crianca-1',
+                      conferir_manualmente: false,
+                      observacao: null,
+                      dados: null,
+                      criancas: { nome: 'Outra Criança' },
+                      arquivos_quarentena: [],
+                    },
+                  ],
                 },
                 {
-                  id: 'nova',
+                  id: 'link-antigo',
                   expira_em: '2099-11-20T12:00:00.000Z',
                   revogado_em: null,
-                  criado_em: '2026-11-17T12:00:00.000Z',
-                  status: 'enviado',
-                  crianca_id: 'crianca-1',
-                  conferir_manualmente: false,
-                  observacao: null,
-                  dados: null,
-                  criancas: { nome: 'Outra Criança' },
-                  arquivos_quarentena: [],
-                  token: 'abc123',
+                  criado_em: '2026-11-16T12:00:00.000Z',
+                  token: null,
+                  cadastros: [],
                 },
               ]),
           },
@@ -64,7 +75,7 @@ describe('CadastrosPendentes', () => {
 
     const fechado = fixture.nativeElement.textContent as string;
     expect(fechado).toContain('Link de');
-    expect(fechado).toContain('1 cadastro');
+    expect(fechado).toContain('2 cadastros');
     expect(fechado).not.toContain('Aprovar');
     expect(fechado).not.toContain('Outra Criança');
 
@@ -85,5 +96,6 @@ describe('CadastrosPendentes', () => {
       (botao as HTMLButtonElement).textContent?.includes('Aprovar'),
     );
     expect(aprovar.length).toBe(1);
+    expect(texto).not.toContain('Pedir correção');
   });
 });
