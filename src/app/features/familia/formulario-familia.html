@@ -13,6 +13,7 @@
     @if (erro(); as falha) {
       <app-estado-erro [mensagem]="falha" />
     }
+    <button class="novo" mat-stroked-button type="button" (click)="novoCadastro()">Fazer novo cadastro</button>
   } @else if (erro() && beneficios().length === 0 && tipos().length === 0) {
     <app-estado-erro [mensagem]="erro()!" />
   } @else {

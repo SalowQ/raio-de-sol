@@ -138,6 +138,14 @@ export class FormularioFamilia implements OnInit {
     return this.arquivos().get(tipoId)?.name ?? '';
   }
 
+  novoCadastro(): void {
+    this.recebido.set(null);
+    this.erro.set(null);
+    this.enviado.set(false);
+    this.arquivos.set(new Map());
+    this.formulario.reset();
+  }
+
   async salvar(): Promise<void> {
     this.enviado.set(true);
     this.formulario.markAllAsTouched();

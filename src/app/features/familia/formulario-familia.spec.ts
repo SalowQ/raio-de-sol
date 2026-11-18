@@ -72,5 +72,15 @@ describe('FormularioFamilia', () => {
       'Recebemos o envio. A equipe do Instituto vai conferir.',
     );
     expect(fixture.nativeElement.textContent).not.toContain('já está cadastrado');
+
+    const novo = [...fixture.nativeElement.querySelectorAll('button')].find((botao) =>
+      (botao as HTMLButtonElement).textContent?.includes('Fazer novo cadastro'),
+    ) as HTMLButtonElement;
+    novo.click();
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('form')).not.toBeNull();
+    expect(componente.formulario.controls.nome.value).toBe('');
+    expect(fixture.nativeElement.textContent).not.toContain('Recebemos o envio.');
   });
 });
