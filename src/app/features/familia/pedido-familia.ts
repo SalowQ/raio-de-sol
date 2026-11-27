@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, effect, inject, input, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
 import type { ItemChecklist } from '../../models/documento';
+import { pedirConfirmacao } from '../../shared/components/confirmar-exclusao/confirmar-exclusao';
 import { EstadoErro } from '../../shared/components/estado-erro/estado-erro';
 import { LinksServico, type LinkDocumentoLista } from './links-servico';
 import {
@@ -20,6 +22,7 @@ import {
 })
 export class PedidoFamilia {
   private readonly links = inject(LinksServico);
+  private readonly dialogos = inject(MatDialog);
 
   readonly criancaId = input.required<string>();
   readonly itens = input<ItemChecklist[]>([]);
@@ -110,6 +113,15 @@ export class PedidoFamilia {
   }
 
   async revogar(id: string): Promise<void> {
+    const confirma = await pedirConfirmacao(this.dialogos, {
+      titulo: 'Revogar link',
+      mensagem: 'A família deixa de enviar documentos por este link.',
+      confirmar: 'Revogar',
+    });
+    if (!confirma) {
+      return;
+    }
+
     this.erro.set(null);
     try {
       await this.links.revogar(id, 'documentos');

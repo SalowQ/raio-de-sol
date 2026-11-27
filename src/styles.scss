@@ -182,6 +182,37 @@ app-root {
   box-shadow: none;
 }
 
+.sol-cortina {
+  background: rgb(59 42 34 / 42%);
+}
+
+html.escuro .sol-cortina {
+  background: rgb(0 0 0 / 62%);
+}
+
+.sol-dialogo .mat-mdc-dialog-surface {
+  background: var(--sol-papel);
+  color: var(--sol-tinta);
+  border-radius: var(--sol-raio);
+  box-shadow: var(--sol-sombra);
+}
+
+.sol-dialogo .mat-mdc-dialog-title {
+  color: var(--sol-tinta);
+}
+
+.sol-dialogo .sol-perigo.mat-mdc-unelevated-button {
+  --mdc-filled-button-container-color: var(--sol-rosa);
+  --mdc-filled-button-label-text-color: var(--sol-texto-falta);
+  background-color: var(--sol-rosa);
+  color: var(--sol-texto-falta);
+}
+
+.sol-dialogo .mat-mdc-button:not(:disabled) {
+  --mdc-text-button-label-text-color: var(--sol-tinta);
+  color: var(--sol-tinta);
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

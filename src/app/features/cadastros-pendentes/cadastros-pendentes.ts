@@ -2,7 +2,9 @@ import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
 import { Carregando } from '../../shared/components/carregando/carregando';
+import { pedirConfirmacao } from '../../shared/components/confirmar-exclusao/confirmar-exclusao';
 import { EstadoErro } from '../../shared/components/estado-erro/estado-erro';
 import { EstadoVazio } from '../../shared/components/estado-vazio/estado-vazio';
 import { LinksServico, type CadastroDoLink, type LinkCadastroLista } from '../familia/links-servico';
@@ -24,6 +26,7 @@ import {
 })
 export class CadastrosPendentes implements OnInit {
   private readonly links = inject(LinksServico);
+  private readonly dialogos = inject(MatDialog);
 
   readonly carregando = signal(true);
   readonly gerando = signal(false);
@@ -172,6 +175,15 @@ export class CadastrosPendentes implements OnInit {
   }
 
   async revogar(id: string): Promise<void> {
+    const confirma = await pedirConfirmacao(this.dialogos, {
+      titulo: 'Revogar link',
+      mensagem: 'O link deixa de aceitar novos cadastros. Os envios já feitos continuam na lista.',
+      confirmar: 'Revogar',
+    });
+    if (!confirma) {
+      return;
+    }
+
     this.erro.set(null);
     try {
       await this.links.revogar(id, 'cadastro');

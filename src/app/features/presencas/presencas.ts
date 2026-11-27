@@ -14,7 +14,7 @@ import { EstadoVazio } from '../../shared/components/estado-vazio/estado-vazio';
 import { rotuloPaginacao, TAMANHO_PAGINA } from '../criancas/paginacao';
 import { AtendimentoServico, type DiaAtendimento, type RegistroDoDia } from './atendimento-servico';
 import { diaLegivel, rotuloSituacao, textoQuantidadeRegistros } from './regras-atendimento';
-import { ExcluirRegistro } from './excluir-registro';
+import { pedirConfirmacao } from '../../shared/components/confirmar-exclusao/confirmar-exclusao';
 import { RegistroAtendimento } from './registro-atendimento';
 
 @Component({
@@ -130,15 +130,10 @@ export class Presencas implements OnInit {
   }
 
   async excluir(dia: string, registro: RegistroDoDia): Promise<void> {
-    const confirma = await firstValueFrom(
-      this.dialogos
-        .open(ExcluirRegistro, {
-          data: { dia: `${diaLegivel(dia)} de ${registro.nome}` },
-          width: '28rem',
-          autoFocus: 'first-tabbable',
-        })
-        .afterClosed(),
-    );
+    const confirma = await pedirConfirmacao(this.dialogos, {
+      titulo: 'Excluir registro',
+      mensagem: `O registro de ${diaLegivel(dia)} de ${registro.nome} será excluído.`,
+    });
     if (!confirma) {
       return;
     }
