@@ -14,7 +14,13 @@
     <app-estado-erro [mensagem]="erro()!" />
   }
 
-  <form class="ficha" [formGroup]="formulario" (ngSubmit)="salvar()">
+  <mat-tab-group
+    animationDuration="200ms"
+    [selectedIndex]="aba()"
+    (selectedIndexChange)="aba.set($event)"
+  >
+    <mat-tab label="Cadastro">
+      <form class="ficha" [formGroup]="formulario" (ngSubmit)="salvar()">
     <section>
       <h2>Criança</h2>
       <div class="grade">
@@ -205,5 +211,48 @@
       </button>
       <a mat-button routerLink="/criancas">Cancelar</a>
     </div>
-  </form>
+      </form>
+    </mat-tab>
+
+    <mat-tab label="Documentos">
+      <div class="aba">
+      @if (id(); as criancaId) {
+        <app-checklist-crianca [criancaId]="criancaId" />
+      } @else {
+        <section>
+          <h2>Documentos</h2>
+          <p class="nota">
+            PDF, JPEG ou PNG, até 10 MB. A lista é a mesma do perfil e do cadastro externo. Os arquivos
+            escolhidos são enviados quando o cadastro é salvo.
+          </p>
+          @if (tipos().length === 0) {
+            <p>Nenhum tipo de documento disponível.</p>
+          } @else {
+            <ul class="tipos">
+              @for (tipo of tipos(); track tipo.id) {
+                <li>
+                  <span>{{ tipo.nome }}</span>
+                  <label class="escolha">
+                    <input
+                      class="entrada"
+                      type="file"
+                      accept="application/pdf,image/jpeg,image/png"
+                      (change)="escolherArquivo(tipo.id, $event)"
+                    />
+                    <span>{{ nomeArquivo(tipo.id) || 'Escolher arquivo' }}</span>
+                  </label>
+                </li>
+              }
+            </ul>
+          }
+          <div class="acoes">
+            <button mat-flat-button color="primary" type="button" [disabled]="salvando()" (click)="salvar()">
+              {{ salvando() ? 'Salvando…' : 'Salvar cadastro' }}
+            </button>
+          </div>
+        </section>
+      }
+      </div>
+    </mat-tab>
+  </mat-tab-group>
 }

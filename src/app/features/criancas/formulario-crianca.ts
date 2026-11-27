@@ -13,7 +13,11 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { MatTabsModule } from '@angular/material/tabs';
 import type { BeneficioCatalogo, SituacaoBeneficio, StatusCrianca } from '../../models/cadastro';
+import type { TipoDocumento } from '../../models/documento';
+import { ChecklistCrianca } from '../documentos/checklist-crianca';
+import { DocumentoServico } from '../documentos/documento-servico';
 import { CampoParentesco } from '../../shared/components/campo-parentesco/campo-parentesco';
 import { Carregando } from '../../shared/components/carregando/carregando';
 import { EstadoErro } from '../../shared/components/estado-erro/estado-erro';
@@ -49,7 +53,9 @@ registerLocaleData(localePt);
     MatInputModule,
     MatSelectModule,
     MatDatepickerModule,
+    MatTabsModule,
     CampoParentesco,
+    ChecklistCrianca,
     Carregando,
     EstadoErro,
   ],
@@ -60,6 +66,7 @@ registerLocaleData(localePt);
 })
 export class FormularioCrianca implements OnInit {
   private readonly cadastro = inject(CadastroServico);
+  private readonly documentos = inject(DocumentoServico);
   private readonly rota = inject(ActivatedRoute);
   private readonly roteador = inject(Router);
   private readonly dialogos = inject(MatDialog);
@@ -68,12 +75,15 @@ export class FormularioCrianca implements OnInit {
   readonly statusOpcoes = STATUS_CRIANCA;
   readonly situacoes = SITUACOES_BENEFICIO;
   readonly beneficios = signal<BeneficioCatalogo[]>([]);
+  readonly tipos = signal<TipoDocumento[]>([]);
+  readonly arquivos = signal<ReadonlyMap<string, File>>(new Map());
   readonly carregando = signal(true);
   readonly pronto = signal(false);
   readonly salvando = signal(false);
   readonly enviado = signal(false);
   readonly erro = signal<string | null>(null);
   readonly id = signal<string | null>(null);
+  readonly aba = signal(0);
 
   readonly formulario = new FormGroup(
     {
@@ -107,6 +117,7 @@ export class FormularioCrianca implements OnInit {
     this.enviado.set(true);
     this.formulario.markAllAsTouched();
     if (this.formulario.invalid || this.salvando()) {
+      this.aba.set(0);
       return;
     }
 
@@ -123,6 +134,7 @@ export class FormularioCrianca implements OnInit {
       }
 
       const destino = await this.cadastro.cadastrar(dados);
+      await this.enviarDocumentos(destino);
       const escolha = await firstValueFrom(
         this.dialogos
           .open(CadastroConcluido, {
@@ -178,6 +190,25 @@ export class FormularioCrianca implements OnInit {
     this.aplicarMascara(campo, mascararOrgaoEmissor(valorDoEvento(evento)));
   }
 
+  escolherArquivo(tipoId: string, evento: Event): void {
+    const entrada = evento.target as HTMLInputElement;
+    const arquivo = entrada.files?.[0];
+    entrada.value = '';
+    this.arquivos.update((atual) => {
+      const proximo = new Map(atual);
+      if (arquivo) {
+        proximo.set(tipoId, arquivo);
+      } else {
+        proximo.delete(tipoId);
+      }
+      return proximo;
+    });
+  }
+
+  nomeArquivo(tipoId: string): string {
+    return this.arquivos().get(tipoId)?.name ?? '';
+  }
+
   private limparParaOutroCadastro(): void {
     this.enviado.set(false);
     this.formulario.reset({
@@ -200,7 +231,28 @@ export class FormularioCrianca implements OnInit {
       parentescoOutro: null,
       beneficios: [],
     });
+    this.arquivos.set(new Map());
     window.scrollTo({ top: 0 });
+  }
+
+  private async enviarDocumentos(criancaId: string): Promise<void> {
+    const falhas: string[] = [];
+    for (const [tipoId, arquivo] of this.arquivos()) {
+      const tipo = this.tipos().find((item) => item.id === tipoId);
+      try {
+        await this.documentos.enviar(criancaId, tipoId, arquivo);
+      } catch (erro: unknown) {
+        falhas.push(`${tipo?.nome ?? 'Documento'}: ${textoDoErro(erro)}`);
+      }
+    }
+    if (falhas.length > 0) {
+      this.avisos.open(falhas.join(' '), 'Fechar', {
+        duration: 8000,
+        panelClass: 'aviso-erro',
+        horizontalPosition: 'center',
+        verticalPosition: 'top',
+      });
+    }
   }
 
   private aplicarMascara(
@@ -221,6 +273,11 @@ export class FormularioCrianca implements OnInit {
     try {
       this.beneficios.set(await this.cadastro.listarBeneficios());
       if (!id) {
+        try {
+          this.tipos.set(await this.documentos.listarTipos());
+        } catch (erro: unknown) {
+          this.erro.set(textoDoErro(erro));
+        }
         this.pronto.set(true);
         return;
       }

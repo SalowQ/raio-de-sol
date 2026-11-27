@@ -17,6 +17,10 @@ const DURACAO_URL = 60;
 export class DocumentoServico {
   constructor(private readonly supabase: SupabaseCliente) {}
 
+  async listarTipos(): Promise<TipoDocumento[]> {
+    return this.tipos(this.cliente());
+  }
+
   async checklist(criancaId: string): Promise<ItemChecklist[]> {
     const cliente = this.cliente();
     const [tipos, documentos] = await Promise.all([
