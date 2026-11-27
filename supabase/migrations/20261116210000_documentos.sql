@@ -30,7 +30,8 @@ values
   ('declaracao_beneficio', 'Declaração de benefício', 11),
   ('termo_imagem', 'Termo de direito de imagem', 12),
   ('outros', 'Outros', 13),
-  ('ficha_contribuicao', 'Ficha de contribuição', 14);
+  ('ficha_contribuicao', 'Ficha de contribuição', 14),
+  ('receita_medicacoes', 'Receita de medicações', 15);
 
 create table public.documentos (
   id uuid primary key default gen_random_uuid(),
