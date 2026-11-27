@@ -98,6 +98,10 @@ export class LinksServico {
     return (data ?? []) as LinkDocumentoLista[];
   }
 
+  async reprovar(id: string): Promise<void> {
+    await this.rpc('reprovar_solicitacao_cadastro', { p_id: id });
+  }
+
   async aprovar(id: string): Promise<void> {
     const resultado = await this.rpc<{ arquivos?: { versao_id: string }[] }>(
       'aprovar_solicitacao_cadastro',

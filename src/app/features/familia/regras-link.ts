@@ -13,6 +13,7 @@ const MENSAGENS = [
   'Este link atingiu o limite de envios.',
   'Muitos envios em pouco tempo. Aguarde alguns minutos.',
   'Este envio precisa de conferência manual e não será ligado a outro cadastro.',
+  'Este envio já foi decidido.',
   'O arquivo já foi promovido.',
   'O cadastro foi ativado, mas um arquivo continuou na quarentena. Aprove o documento no perfil da criança.',
   'Recebemos o envio. A equipe do Instituto vai conferir.',
@@ -91,6 +92,10 @@ export function mensagemLink(texto: string | undefined): string {
     return 'Aplique o SQL novo do envio de arquivos da família no Supabase e tente de novo.';
   }
 
+  if (texto?.includes('reprovar_solicitacao_cadastro')) {
+    return 'Aplique o SQL novo da reprovação de cadastro no Supabase e tente de novo.';
+  }
+
   if (
     texto?.includes('permission denied') ||
     texto?.includes('Could not find the function') ||
@@ -126,6 +131,8 @@ export function rotuloSolicitacao(status: string, manual: boolean): string {
       return 'Correção pedida';
     case 'aprovado':
       return 'Aprovado';
+    case 'reprovado':
+      return 'Reprovado';
     case 'encerrado':
       return 'Encerrado';
     default:

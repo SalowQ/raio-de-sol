@@ -117,9 +117,12 @@
                         @if (cadastro.crianca_id) {
                           <a mat-stroked-button [routerLink]="['/criancas', cadastro.crianca_id]">Abrir perfil</a>
                         }
-                        @if (!cadastro.conferir_manualmente && cadastro.crianca_id && cadastro.status !== 'aprovado') {
+                        @if (podeDecidir(cadastro)) {
                           <button mat-flat-button color="primary" type="button" (click)="aprovar(cadastro.id)">
                             Aprovar
+                          </button>
+                          <button mat-stroked-button type="button" (click)="reprovar(cadastro.id)">
+                            Reprovar
                           </button>
                         }
                       </div>

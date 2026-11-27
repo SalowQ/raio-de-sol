@@ -88,6 +88,15 @@ export class CadastrosPendentes implements OnInit {
     return 'Aberto';
   }
 
+  podeDecidir(item: CadastroDoLink): boolean {
+    return (
+      !item.conferir_manualmente &&
+      item.crianca_id !== null &&
+      item.status !== 'aprovado' &&
+      item.status !== 'reprovado'
+    );
+  }
+
   arquivos(item: CadastroDoLink): number {
     return item.arquivos_quarentena?.length ?? 0;
   }
@@ -138,6 +147,17 @@ export class CadastrosPendentes implements OnInit {
 
   async copiar(link: string): Promise<void> {
     await navigator.clipboard.writeText(link);
+  }
+
+  async reprovar(id: string): Promise<void> {
+    this.erro.set(null);
+    try {
+      await this.links.reprovar(id);
+      await this.carregar();
+    } catch (erro: unknown) {
+      this.erro.set(texto(erro));
+      await this.carregar(true);
+    }
   }
 
   async aprovar(id: string): Promise<void> {

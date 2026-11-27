@@ -79,6 +79,7 @@ describe('CadastrosPendentes', () => {
     expect(fechado).toContain('0 aprovados');
     expect(fechado).toContain('0 reprovados');
     expect(fechado).not.toContain('Aprovar');
+    expect(fechado).not.toContain('Reprovar');
     expect(fechado).not.toContain('Outra Criança');
 
     const linhas = [...fixture.nativeElement.querySelectorAll('button.linha')] as HTMLButtonElement[];
@@ -98,6 +99,10 @@ describe('CadastrosPendentes', () => {
       (botao as HTMLButtonElement).textContent?.includes('Aprovar'),
     );
     expect(aprovar.length).toBe(1);
+    const reprovar = [...fixture.nativeElement.querySelectorAll('button')].filter((botao) =>
+      (botao as HTMLButtonElement).textContent?.includes('Reprovar'),
+    );
+    expect(reprovar.length).toBe(1);
     expect(texto).not.toContain('Pedir correção');
   });
 });
