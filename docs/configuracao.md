@@ -40,6 +40,10 @@ values ('uuid-do-usuario-em-auth-users', 'Nome do funcionário');
 
 Uma conta autenticada sem essa linha vê a tela de acesso negado. O aplicativo não oferece auto-cadastro.
 
+16. No SQL Editor, execute [supabase/migrations/20261126230000_registro_atendimento.sql](../supabase/migrations/20261126230000_registro_atendimento.sql). Ele cria o registro diário de presença e falta, com anotação da sessão. Sem esse arquivo, a tela de atendimento não carrega.
+17. No SQL Editor, execute [supabase/migrations/20261126240000_atendimento_edicao.sql](../supabase/migrations/20261126240000_atendimento_edicao.sql). Ele impede criar dois registros no mesmo dia e libera editar e excluir. Sem esse arquivo, um registro novo ainda substitui o dia que já existe.
+18. No SQL Editor, execute [supabase/migrations/20261126250000_dias_atendimento.sql](../supabase/migrations/20261126250000_dias_atendimento.sql). Ele cria a lista de dias com a quantidade de registros. Sem esse arquivo, a tela de registro diário não carrega os dias.
+
 ## Supabase local
 
 O arquivo [supabase/config.toml](../supabase/config.toml) já desliga o cadastro público, exige senha de 8 caracteres e aponta o site local para `http://localhost:4200`.

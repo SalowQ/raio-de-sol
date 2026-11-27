@@ -1,0 +1,30 @@
+.ficha {
+  display: grid;
+  gap: 0.85rem;
+  min-width: min(24rem, 70vw);
+}
+
+.largo,
+mat-form-field {
+  width: 100%;
+}
+
+.marcas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.marcada {
+  background: var(--sol-acento-suave);
+  font-weight: 700;
+}
+
+.falha {
+  margin: 0;
+  color: var(--sol-acento);
+}
+
+mat-dialog-actions {
+  gap: 0.5rem;
+}

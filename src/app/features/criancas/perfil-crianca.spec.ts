@@ -5,6 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import type { CriancaPerfil } from '../../models/cadastro';
 import { CadastroServico } from './cadastro-servico';
 import { DocumentoServico } from '../documentos/documento-servico';
+import { AtendimentoServico } from '../presencas/atendimento-servico';
 import { PerfilCrianca } from './perfil-crianca';
 import { idadeEmAnos, rotuloIdade } from './regras-cadastro';
 
@@ -43,6 +44,7 @@ describe('PerfilCrianca', () => {
           },
         },
         { provide: DocumentoServico, useValue: { checklist: () => Promise.resolve([]) } },
+        { provide: AtendimentoServico, useValue: { listarDaCrianca: () => Promise.resolve({ itens: [], total: 0, presentes: 0, faltas: 0 }) } },
       ],
     }).compileComponents();
 

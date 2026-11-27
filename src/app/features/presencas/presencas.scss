@@ -1,0 +1,139 @@
+.topo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.topo button {
+  flex: none;
+}
+
+.olho {
+  margin: 0;
+  color: var(--sol-acento);
+  font-weight: 700;
+}
+
+h1 {
+  margin: 0.15rem 0 0;
+  font-size: 2rem;
+}
+
+.nota {
+  margin: 0.65rem 0 0;
+  color: var(--sol-suave);
+  line-height: 1.45;
+}
+
+.nome {
+  font-weight: 700;
+}
+
+.marca {
+  width: 0.45rem;
+  height: 0.45rem;
+  margin-right: 0.15rem;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(-45deg);
+}
+
+.marca.aberta {
+  transform: rotate(45deg);
+}
+
+.etiquetas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  color: var(--sol-suave);
+}
+
+.etiquetas span {
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+  background: var(--sol-acento-suave);
+}
+
+button.linha {
+  width: 100%;
+  border: 0;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.detalhe {
+  padding: 0.35rem 1.25rem 1.1rem;
+  border-top: 1px solid var(--sol-linha);
+  background: var(--sol-papel);
+}
+
+.registros {
+  margin: 0.85rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.registros li {
+  margin-top: 0.85rem;
+  padding: 0.9rem 1rem;
+  border-radius: 0.9rem;
+  background: var(--sol-lista-par);
+}
+
+.cabecalho {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.75rem;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.cabecalho h2 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.acoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.situacao {
+  flex: none;
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.situacao.presente {
+  background: var(--sol-menta);
+  color: var(--sol-texto-ativo);
+}
+
+.situacao.falta {
+  background: var(--sol-rosa);
+  color: var(--sol-texto-falta);
+}
+
+.registros p,
+.vazio-dia {
+  color: var(--sol-suave);
+}
+
+.registros p,
+.vazio-dia {
+  margin: 0.55rem 0 0;
+  line-height: 1.45;
+}
+
+.vazio-dia {
+  margin-top: 0.85rem;
+}

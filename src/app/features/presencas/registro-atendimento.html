@@ -1,0 +1,73 @@
+<h2 mat-dialog-title>{{ titulo() }}</h2>
+<mat-dialog-content>
+  <form class="ficha" [formGroup]="formulario" (ngSubmit)="salvar()">
+    @if (dados.escolherCrianca) {
+      <mat-form-field appearance="outline">
+        <mat-label>Criança</mat-label>
+        <mat-select formControlName="criancaId">
+          @for (crianca of criancas(); track crianca.id) {
+            <mat-option [value]="crianca.id">{{ crianca.nome }}</mat-option>
+          }
+        </mat-select>
+        @if (enviado() && formulario.controls.criancaId.hasError('required')) {
+          <mat-error>Escolha a criança.</mat-error>
+        }
+      </mat-form-field>
+      @if (!carregandoCriancas() && criancas().length === 0 && !erro()) {
+        <p class="falha">Nenhuma criança ativa.</p>
+      }
+    }
+
+    <mat-form-field appearance="outline">
+      <mat-label>Data</mat-label>
+      <input matInput [matDatepicker]="dia" formControlName="dia" />
+      <mat-datepicker-toggle matIconSuffix [for]="dia" aria-label="Abrir calendário" />
+      <mat-datepicker #dia />
+      @if (enviado() && formulario.controls.dia.hasError('dataObrigatoria')) {
+        <mat-error>Informe a data.</mat-error>
+      }
+    </mat-form-field>
+
+    <div class="marcas" role="group" aria-label="Presença ou falta">
+      <button
+        mat-stroked-button
+        type="button"
+        [class.marcada]="formulario.controls.situacao.value === 'presente'"
+        [attr.aria-pressed]="formulario.controls.situacao.value === 'presente'"
+        (click)="marcar('presente')"
+      >
+        Presente
+      </button>
+      <button
+        mat-stroked-button
+        type="button"
+        [class.marcada]="formulario.controls.situacao.value === 'falta'"
+        [attr.aria-pressed]="formulario.controls.situacao.value === 'falta'"
+        (click)="marcar('falta')"
+      >
+        Falta
+      </button>
+    </div>
+    @if (enviado() && !formulario.controls.situacao.value) {
+      <p class="falha">Marque presença ou falta.</p>
+    }
+
+    <mat-form-field appearance="outline" class="largo">
+      <mat-label>Observação</mat-label>
+      <textarea matInput rows="3" maxlength="1000" formControlName="observacao"></textarea>
+      <mat-hint>Opcional.</mat-hint>
+    </mat-form-field>
+
+    @if (erro(); as mensagem) {
+      @if (mensagem !== 'Marque presença ou falta.') {
+        <p class="falha">{{ mensagem }}</p>
+      }
+    }
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button type="button" [mat-dialog-close]="false" [disabled]="salvando()">Cancelar</button>
+  <button mat-flat-button color="primary" type="button" [disabled]="salvando() || carregandoCriancas()" (click)="salvar()">
+    {{ salvando() ? 'Salvando…' : 'Salvar' }}
+  </button>
+</mat-dialog-actions>

@@ -1,0 +1,85 @@
+<header class="topo">
+  <div>
+    <p class="olho">Atendimento</p>
+    <h1>Registro diário de atendimento</h1>
+    <p class="nota">Dias que já têm registro, do mais recente para o mais antigo. Abrir um dia mostra os registros dele.</p>
+  </div>
+  <button mat-flat-button color="primary" type="button" (click)="adicionar()">Adicionar registro</button>
+</header>
+
+@if (carregando()) {
+  <app-carregando rotulo="Carregando os dias" />
+} @else if (erro(); as mensagem) {
+  <app-estado-erro [mensagem]="mensagem" />
+} @else if (dias().length === 0) {
+  <app-estado-vazio
+    titulo="Nenhum dia com registro"
+    descricao="Os dias aparecem aqui depois que uma criança tiver presença ou falta."
+  />
+} @else {
+  <section class="painel-lista">
+    <ul class="lista">
+      @for (item of dias(); track item.dia) {
+        <li>
+          <button
+            class="linha"
+            type="button"
+            [attr.aria-expanded]="aberto(item.dia)"
+            (click)="alternar(item.dia)"
+          >
+            <span class="marca" [class.aberta]="aberto(item.dia)" aria-hidden="true"></span>
+            <span class="nome">{{ diaLegivel(item.dia) }}</span>
+            <span class="etiquetas">
+              <span>{{ textoQuantidade(item.quantidade) }}</span>
+            </span>
+          </button>
+
+          @if (aberto(item.dia)) {
+            <div class="detalhe">
+              @if (carregandoEste(item.dia)) {
+                <app-carregando rotulo="Carregando os registros do dia" />
+              } @else if (erroDeste(item.dia); as falha) {
+                <app-estado-erro [mensagem]="falha" />
+              } @else if (registrosDeste(item.dia).length === 0) {
+                <p class="vazio-dia">Nenhum registro neste dia.</p>
+              } @else {
+                <ul class="registros">
+                  @for (registro of registrosDeste(item.dia); track registro.id) {
+                    <li>
+                      <div class="cabecalho">
+                        <h2>{{ registro.nome }}</h2>
+                        <span
+                          class="situacao"
+                          [class.presente]="registro.situacao === 'presente'"
+                          [class.falta]="registro.situacao === 'falta'"
+                        >{{ rotuloSituacao(registro.situacao) }}</span>
+                      </div>
+                      @if (registro.anotacao) {
+                        <p>{{ registro.anotacao }}</p>
+                      }
+                      <div class="acoes">
+                        <button mat-stroked-button type="button" (click)="editar(item.dia, registro)">Editar</button>
+                        <button mat-button type="button" (click)="excluir(item.dia, registro)">Excluir</button>
+                      </div>
+                    </li>
+                  }
+                </ul>
+              }
+            </div>
+          }
+        </li>
+      }
+    </ul>
+    <footer class="paginacao">
+      <p class="resumo">{{ resumoPagina() }}</p>
+      <mat-paginator
+        [length]="total()"
+        [pageIndex]="pagina()"
+        [pageSize]="tamanhoPagina"
+        [hidePageSize]="true"
+        (page)="mudarPagina($event)"
+        aria-label="Páginas de dias"
+      />
+    </footer>
+  </section>
+}

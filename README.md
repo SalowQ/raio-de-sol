@@ -1,8 +1,8 @@
 # Instituto Raio de Sol
 
-Painel web para a equipe do Instituto cadastrar crianças, organizar documentos e receber envios da família. Esta versão entrega as Etapas 1 a 4: aplicação Angular, autenticação, cadastro, documentos com versões e links temporários.
+Painel web para a equipe do Instituto cadastrar crianças, organizar documentos, receber envios da família e registrar o atendimento do dia. Esta versão entrega as Etapas 1 a 5.
 
-A presença e a exportação entram nas etapas seguintes.
+A exportação entra na etapa seguinte.
 
 ## Requisitos
 

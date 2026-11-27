@@ -51,11 +51,8 @@
     <mat-tab label="Documentos">
       <app-checklist-crianca [criancaId]="ficha.id" />
     </mat-tab>
-    <mat-tab label="Presença">
-      <app-estado-vazio
-        titulo="Presença"
-        descricao="O registro de presença ainda não está disponível neste perfil."
-      />
+    <mat-tab label="Atendimento">
+      <app-atendimentos-crianca [criancaId]="ficha.id" />
     </mat-tab>
     <mat-tab label="Histórico">
       <app-estado-vazio

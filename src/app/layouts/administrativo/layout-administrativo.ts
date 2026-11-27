@@ -52,7 +52,7 @@ export class LayoutAdministrativo {
     { rotulo: 'Painel', caminho: '/painel', icone: 'painel' },
     { rotulo: 'Crianças', caminho: '/criancas', icone: 'criancas' },
     { rotulo: 'Cadastros pendentes', caminho: '/cadastros-pendentes', icone: 'pendentes' },
-    { rotulo: 'Presença', caminho: '/presenca', icone: 'presenca' },
+    { rotulo: 'Registro diário', caminho: '/presenca', icone: 'presenca' },
     { rotulo: 'Histórico', caminho: '/historico', icone: 'historico' },
     { rotulo: 'Configurações', caminho: '/configuracoes', icone: 'configuracoes' },
   ];

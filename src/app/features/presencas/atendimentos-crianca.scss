@@ -1,0 +1,91 @@
+:host {
+  display: block;
+  padding-top: 1rem;
+}
+
+.topo {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.85rem;
+}
+
+.topo button {
+  flex: none;
+}
+
+.nota,
+.lista p {
+  margin: 0;
+  color: var(--sol-suave);
+  line-height: 1.45;
+}
+
+.resumo {
+  margin: 0.65rem 0 0;
+  color: var(--sol-tinta);
+  font-weight: 700;
+}
+
+.lista {
+  margin: 0.85rem 0;
+  padding: 0;
+  list-style: none;
+  border-radius: var(--sol-raio);
+  background: var(--sol-papel);
+  box-shadow: var(--sol-sombra);
+}
+
+.lista li {
+  padding: 0.85rem 1.15rem;
+}
+
+.lista li + li {
+  border-top: 1px solid var(--sol-linha);
+}
+
+.acoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.65rem;
+}
+
+.linha {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+  font-weight: 700;
+}
+
+.situacao {
+  flex: none;
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+}
+
+.situacao.presente {
+  background: var(--sol-menta);
+  color: var(--sol-texto-ativo);
+}
+
+.situacao.falta {
+  background: var(--sol-rosa);
+  color: var(--sol-texto-falta);
+}
+
+.paginacao {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  margin-top: 0.85rem;
+}
+
+.paginacao .resumo {
+  margin: 0;
+}

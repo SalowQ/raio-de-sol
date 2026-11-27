@@ -88,7 +88,7 @@ export const routes: Routes = [
       },
       {
         path: 'presenca',
-        title: 'Presença',
+        title: 'Registro diário de atendimento',
         loadComponent: () => import('./features/presencas/presencas').then((m) => m.Presencas),
       },
       {

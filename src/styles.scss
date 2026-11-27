@@ -26,6 +26,8 @@
   --sol-fundo-inativo: #f0e4dc;
   --sol-texto-ativo: #1f6b45;
   --sol-texto-pendente: #7a5a10;
+  --sol-rosa: #f8d6d3;
+  --sol-texto-falta: #9b2c2c;
   --sol-sombra: 0 12px 32px rgb(92 48 18 / 8%);
   --sol-raio: 1.5rem;
   color-scheme: light;
@@ -49,6 +51,8 @@ html.escuro {
   --sol-fundo-inativo: #3a302b;
   --sol-texto-ativo: #b7ebc9;
   --sol-texto-pendente: #ffe39a;
+  --sol-rosa: #4a2424;
+  --sol-texto-falta: #f5b4b4;
   --sol-sombra: 0 12px 32px rgb(0 0 0 / 35%);
   color-scheme: dark;
 }

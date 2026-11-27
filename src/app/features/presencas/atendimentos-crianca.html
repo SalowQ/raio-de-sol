@@ -1,0 +1,58 @@
+<header class="topo">
+  <div>
+    <p class="nota">
+      Presenças e faltas desta criança, da mais recente para a mais antiga. A contagem é um total dos
+      registros, sem percentual.
+    </p>
+    @if (!carregando() && total() > 0) {
+      <p class="resumo">{{ frequencia() }}</p>
+    }
+  </div>
+  <button mat-flat-button color="primary" type="button" (click)="adicionar()">Adicionar registro</button>
+</header>
+
+@if (erro(); as mensagem) {
+  <app-estado-erro [mensagem]="mensagem" />
+}
+
+@if (carregando()) {
+  <app-carregando rotulo="Carregando atendimentos" />
+} @else if (itens().length === 0) {
+  <app-estado-vazio
+    titulo="Nenhum atendimento"
+    descricao="A presença e a falta desta criança aparecem aqui depois de um registro."
+  />
+} @else {
+  <ul class="lista">
+    @for (item of itens(); track item.id) {
+      <li>
+        <div class="linha">
+          <span>{{ diaLegivel(item.dia) }}</span>
+          <span
+            class="situacao"
+            [class.presente]="item.situacao === 'presente'"
+            [class.falta]="item.situacao === 'falta'"
+          >{{ rotuloSituacao(item.situacao) }}</span>
+        </div>
+        @if (item.anotacao) {
+          <p>{{ item.anotacao }}</p>
+        }
+        <div class="acoes">
+          <button mat-stroked-button type="button" (click)="editar(item)">Editar</button>
+          <button mat-button type="button" (click)="excluir(item)">Excluir</button>
+        </div>
+      </li>
+    }
+  </ul>
+  <footer class="paginacao">
+    <p class="resumo">{{ resumoPagina() }}</p>
+    <mat-paginator
+      [length]="total()"
+      [pageIndex]="pagina()"
+      [pageSize]="tamanhoPagina"
+      [hidePageSize]="true"
+      (page)="mudarPagina($event)"
+      aria-label="Páginas de atendimentos"
+    />
+  </footer>
+}

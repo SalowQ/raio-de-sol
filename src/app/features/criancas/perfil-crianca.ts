@@ -7,6 +7,7 @@ import { Carregando } from '../../shared/components/carregando/carregando';
 import { EstadoErro } from '../../shared/components/estado-erro/estado-erro';
 import { EstadoVazio } from '../../shared/components/estado-vazio/estado-vazio';
 import { ChecklistCrianca } from '../documentos/checklist-crianca';
+import { AtendimentosCrianca } from '../presencas/atendimentos-crianca';
 import { CadastroServico } from './cadastro-servico';
 import {
   formatarCpf,
@@ -19,7 +20,16 @@ import {
 
 @Component({
   selector: 'app-perfil-crianca',
-  imports: [RouterLink, MatButtonModule, MatTabsModule, Carregando, EstadoErro, EstadoVazio, ChecklistCrianca],
+  imports: [
+    RouterLink,
+    MatButtonModule,
+    MatTabsModule,
+    Carregando,
+    EstadoErro,
+    EstadoVazio,
+    ChecklistCrianca,
+    AtendimentosCrianca,
+  ],
   templateUrl: './perfil-crianca.html',
   styleUrl: './perfil-crianca.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
