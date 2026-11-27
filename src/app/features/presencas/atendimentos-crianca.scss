@@ -89,3 +89,156 @@
 .paginacao .resumo {
   margin: 0;
 }
+
+.visoes {
+  display: inline-flex;
+  margin: 0.15rem 0 1rem;
+  padding: 0.2rem;
+  border-radius: 999px;
+  background: var(--sol-acento-suave);
+}
+
+.visoes button {
+  border: 0;
+  border-radius: 999px;
+  padding: 0.4rem 0.9rem;
+  background: transparent;
+  color: var(--sol-tinta);
+  font: inherit;
+  cursor: pointer;
+}
+
+.visoes button.ativa {
+  background: var(--sol-papel);
+  font-weight: 700;
+}
+
+.mes {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  max-width: 16rem;
+  margin-bottom: 0.85rem;
+  color: var(--sol-suave);
+  font-size: 0.85rem;
+}
+
+.mes select {
+  min-height: 2.5rem;
+  padding: 0.35rem 0.7rem;
+  border: 1px solid var(--sol-linha);
+  border-radius: 0.8rem;
+  background: var(--sol-papel);
+  color: var(--sol-tinta);
+  font: inherit;
+}
+
+.calendario {
+  padding: 0.85rem;
+  border-radius: var(--sol-raio);
+  background: var(--sol-papel);
+  box-shadow: var(--sol-sombra);
+}
+
+.semana,
+.grade {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0.35rem;
+}
+
+.semana {
+  margin-bottom: 0.35rem;
+  color: var(--sol-suave);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.celula {
+  position: relative;
+  min-height: 2.6rem;
+  border-radius: 0.7rem;
+  background: var(--sol-lista);
+}
+
+.celula.fora:not(.presente):not(.falta) .numero {
+  color: var(--sol-suave);
+  opacity: 0.55;
+}
+
+.celula.presente {
+  background: var(--sol-menta);
+  color: var(--sol-texto-ativo);
+}
+
+.celula.falta {
+  background: var(--sol-rosa);
+  color: var(--sol-texto-falta);
+}
+
+.numero {
+  display: block;
+  padding: 0.35rem 0.4rem;
+  font-weight: 700;
+}
+
+.calendario,
+.grade,
+.celula {
+  overflow: visible;
+}
+
+.cartao {
+  display: none;
+  position: fixed;
+  z-index: 30;
+  width: 14rem;
+  padding: 0.7rem 0.75rem;
+  border: 1px solid var(--sol-linha);
+  border-radius: 0.8rem;
+  background: var(--sol-papel);
+  box-shadow: var(--sol-sombra);
+  color: var(--sol-tinta);
+}
+
+.cartao.aberto {
+  display: block;
+}
+
+.cartao p {
+  max-height: 8rem;
+  margin: 0;
+  overflow: auto;
+  color: var(--sol-suave);
+  line-height: 1.4;
+}
+
+.icones {
+  display: flex;
+  gap: 0.35rem;
+  margin-top: 0.55rem;
+}
+
+.icones button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid var(--sol-linha);
+  border-radius: 0.6rem;
+  background: var(--sol-papel);
+  color: var(--sol-tinta);
+  cursor: pointer;
+}
+
+.icones svg {
+  width: 1.05rem;
+  height: 1.05rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}

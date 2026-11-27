@@ -211,6 +211,47 @@ export class AtendimentoServico {
     };
   }
 
+  async listarDiasDaCrianca(criancaId: string): Promise<string[]> {
+    const cliente = this.cliente();
+    const { data, error } = await cliente
+      .from('atendimentos')
+      .select('dia')
+      .eq('crianca_id', criancaId)
+      .eq('sessao', 'dia')
+      .order('dia', { ascending: false })
+      .limit(1000);
+
+    if (error) {
+      throw new Error(mensagemAtendimento(error.message));
+    }
+
+    return ((data ?? []) as { dia: string }[]).map((item) => item.dia);
+  }
+
+  async listarPeriodo(criancaId: string, inicio: string, fim: string): Promise<AtendimentoCrianca[]> {
+    const cliente = this.cliente();
+    const { data, error } = await cliente
+      .from('atendimentos')
+      .select('id, dia, situacao, anotacao')
+      .eq('crianca_id', criancaId)
+      .eq('sessao', 'dia')
+      .gte('dia', inicio)
+      .lte('dia', fim);
+
+    if (error) {
+      throw new Error(mensagemAtendimento(error.message));
+    }
+
+    return ((data ?? []) as { id: string; dia: string; situacao: string; anotacao: string | null }[])
+      .filter((item) => item.situacao === 'presente' || item.situacao === 'falta')
+      .map((item) => ({
+        id: item.id,
+        dia: item.dia,
+        situacao: item.situacao as SituacaoAtendimento,
+        anotacao: item.anotacao,
+      }));
+  }
+
   private cliente() {
     const cliente = this.supabase.cliente;
     if (!cliente) {

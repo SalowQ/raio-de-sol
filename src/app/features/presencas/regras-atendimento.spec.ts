@@ -1,7 +1,10 @@
 import {
   filtrarPorNome,
+  diasDoCalendario,
+  mesesDisponiveis,
   montarLinhas,
   ordenarAtendimentosRecentes,
+  rotuloMes,
   textoFrequencia,
   textoTotaisDia,
   totaisDoDia,
@@ -34,6 +37,21 @@ describe('regras do atendimento', () => {
     expect(texto).toBe('1 presença, 1 falta, 1 sem registro');
     expect(texto).not.toContain('%');
     expect(textoFrequencia(2, 1)).toBe('2 presenças e 1 falta.');
+  });
+
+  it('monta o calendário do mês e inclui o mês atual na lista', () => {
+    const dias = diasDoCalendario('2026-11');
+    expect(dias[0]).toEqual({ iso: '2026-10-26', numero: 26, fora: true });
+    expect(dias.at(-1)).toEqual({ iso: '2026-12-06', numero: 6, fora: true });
+    expect(dias.find((dia) => dia.iso === '2026-11-01')?.fora).toBe(false);
+    expect(dias.length % 7).toBe(0);
+
+    expect(mesesDisponiveis(['2026-09-02', '2026-11-20'], new Date(2026, 11, 1))).toEqual([
+      '2026-12',
+      '2026-11',
+      '2026-09',
+    ]);
+    expect(rotuloMes('2026-11')).toBe('Novembro de 2026');
   });
 
   it('deixa o dia mais recente na frente', () => {

@@ -133,6 +133,78 @@ export function textoFrequencia(presentes: number, faltas: number): string {
   return `${quantidade(presentes, 'presença', 'presenças')} e ${quantidade(faltas, 'falta', 'faltas')}.`;
 }
 
+const NOMES_MES = [
+  'janeiro',
+  'fevereiro',
+  'março',
+  'abril',
+  'maio',
+  'junho',
+  'julho',
+  'agosto',
+  'setembro',
+  'outubro',
+  'novembro',
+  'dezembro',
+];
+
+export interface DiaCalendario {
+  iso: string;
+  numero: number;
+  fora: boolean;
+}
+
+/** Mês no formato `AAAA-MM`, no fuso local. */
+export function mesAtual(data = new Date()): string {
+  return diaLocal(data).slice(0, 7);
+}
+
+export function rotuloMes(chave: string): string {
+  const [ano, mes] = chave.split('-');
+  const nome = NOMES_MES[Number(mes) - 1];
+  if (!ano || !nome) {
+    return chave;
+  }
+  return `${nome.charAt(0).toUpperCase()}${nome.slice(1)} de ${ano}`;
+}
+
+/** O mês atual entra mesmo sem registro. Os demais vêm dos dias já gravados. */
+export function mesesDisponiveis(dias: readonly string[], hoje = new Date()): string[] {
+  const chaves = new Set<string>([mesAtual(hoje)]);
+  for (const dia of dias) {
+    if (/^\d{4}-\d{2}-\d{2}$/.test(dia)) {
+      chaves.add(dia.slice(0, 7));
+    }
+  }
+  return [...chaves].sort((a, b) => b.localeCompare(a));
+}
+
+/** Semanas de segunda a domingo que cobrem o mês, com os dias vizinhos que aparecem na grade. */
+export function diasDoCalendario(chave: string): DiaCalendario[] {
+  const [anoTexto, mesTexto] = chave.split('-');
+  const ano = Number(anoTexto);
+  const mes = Number(mesTexto);
+  if (!ano || mes < 1 || mes > 12) {
+    return [];
+  }
+
+  const primeiro = new Date(ano, mes - 1, 1);
+  const inicio = new Date(ano, mes - 1, 1 - ((primeiro.getDay() + 6) % 7));
+  const ultimo = new Date(ano, mes, 0);
+  const fim = new Date(ano, mes - 1, ultimo.getDate() + ((7 - ((ultimo.getDay() + 6) % 7) - 1 + 7) % 7));
+  const dias: DiaCalendario[] = [];
+
+  for (const cursor = new Date(inicio); cursor <= fim; cursor.setDate(cursor.getDate() + 1)) {
+    dias.push({
+      iso: diaLocal(cursor),
+      numero: cursor.getDate(),
+      fora: cursor.getMonth() !== mes - 1,
+    });
+  }
+
+  return dias;
+}
+
 export function mensagemAtendimento(texto: string | undefined): string {
   if (texto?.includes('dias_atendimento')) {
     return 'Aplique o SQL novo da lista de dias de atendimento no Supabase e tente de novo.';

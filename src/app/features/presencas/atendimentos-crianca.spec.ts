@@ -163,4 +163,78 @@ describe('AtendimentosCrianca', () => {
 
     expect(excluidos).toEqual([['recente']]);
   });
+
+  it('mostra o mês no calendário e guarda a anotação no dia colorido', async () => {
+    const periodos: string[][] = [];
+    await TestBed.configureTestingModule({
+      imports: [AtendimentosCrianca],
+      providers: [
+        provideRouter([]),
+        provideNoopAnimations(),
+        {
+          provide: AtendimentoServico,
+          useValue: {
+            listarDaCrianca: () =>
+              Promise.resolve({
+                itens: [],
+                total: 1,
+                presentes: 1,
+                faltas: 0,
+              }),
+            listarDiasDaCrianca: () => Promise.resolve(['2026-11-20', '2026-09-02']),
+            listarPeriodo: (_id: string, inicio: string, fim: string) => {
+              periodos.push([inicio, fim]);
+              if (inicio <= '2026-11-20' && fim >= '2026-11-20') {
+                return Promise.resolve([
+                  { id: 'cal', dia: '2026-11-20', situacao: 'presente', anotacao: 'Nota do calendário' },
+                ]);
+              }
+              return Promise.resolve([
+                { id: 'falta', dia: '2026-09-02', situacao: 'falta', anotacao: null },
+              ]);
+            },
+          },
+        },
+      ],
+    }).compileComponents();
+
+    const fixture = TestBed.createComponent(AtendimentosCrianca);
+    fixture.componentRef.setInput('criancaId', 'crianca-1');
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('select')).toBeNull();
+    const calendario = [...fixture.nativeElement.querySelectorAll('button')].find((botao) =>
+      (botao as HTMLButtonElement).textContent?.includes('Calendário'),
+    ) as HTMLButtonElement;
+    calendario.click();
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    const select = fixture.nativeElement.querySelector('select') as HTMLSelectElement;
+    expect(select.value).toMatch(/^\d{4}-\d{2}$/);
+    expect(select.textContent).toContain('Novembro de 2026');
+    expect(select.textContent).toContain('Setembro de 2026');
+    select.value = '2026-11';
+    select.dispatchEvent(new Event('change'));
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    const presente = fixture.nativeElement.querySelector('.celula.presente') as HTMLElement;
+    expect(presente.querySelector('.numero')?.textContent?.trim()).toBe('20');
+    expect(presente.querySelector('.cartao')?.textContent).toContain('Nota do calendário');
+    expect(presente.querySelector('[aria-label="Editar registro"]')).not.toBeNull();
+    expect(presente.querySelector('[aria-label="Excluir registro"]')).not.toBeNull();
+
+    select.value = '2026-09';
+    select.dispatchEvent(new Event('change'));
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    const falta = fixture.nativeElement.querySelector('.celula.falta') as HTMLElement;
+    expect(falta.querySelector('.numero')?.textContent?.trim()).toBe('2');
+    expect(falta.querySelector('.cartao')?.textContent).toContain('Sem anotação.');
+    expect(periodos.some(([inicio, fim]) => inicio <= '2026-11-20' && fim >= '2026-11-20')).toBe(true);
+  });
 });

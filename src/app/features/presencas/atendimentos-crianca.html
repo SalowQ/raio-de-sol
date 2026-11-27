@@ -11,48 +11,136 @@
   <button mat-flat-button color="primary" type="button" (click)="adicionar()">Adicionar registro</button>
 </header>
 
-@if (erro(); as mensagem) {
-  <app-estado-erro [mensagem]="mensagem" />
-}
+<div class="visoes" role="group" aria-label="Visualização do atendimento">
+  <button type="button" [class.ativa]="modo() === 'lista'" [attr.aria-pressed]="modo() === 'lista'" (click)="trocarModo('lista')">
+    Lista
+  </button>
+  <button
+    type="button"
+    [class.ativa]="modo() === 'calendario'"
+    [attr.aria-pressed]="modo() === 'calendario'"
+    (click)="trocarModo('calendario')"
+  >
+    Calendário
+  </button>
+</div>
 
-@if (carregando()) {
-  <app-carregando rotulo="Carregando atendimentos" />
-} @else if (itens().length === 0) {
-  <app-estado-vazio
-    titulo="Nenhum atendimento"
-    descricao="A presença e a falta desta criança aparecem aqui depois de um registro."
-  />
-} @else {
-  <ul class="lista">
-    @for (item of itens(); track item.id) {
-      <li>
-        <div class="linha">
-          <span>{{ diaLegivel(item.dia) }}</span>
-          <span
-            class="situacao"
-            [class.presente]="item.situacao === 'presente'"
-            [class.falta]="item.situacao === 'falta'"
-          >{{ rotuloSituacao(item.situacao) }}</span>
-        </div>
-        @if (item.anotacao) {
-          <p>{{ item.anotacao }}</p>
-        }
-        <div class="acoes">
-          <button mat-stroked-button type="button" (click)="editar(item)">Editar</button>
-          <button mat-button type="button" (click)="excluir(item)">Excluir</button>
-        </div>
-      </li>
-    }
-  </ul>
-  <footer class="paginacao">
-    <p class="resumo">{{ resumoPagina() }}</p>
-    <mat-paginator
-      [length]="total()"
-      [pageIndex]="pagina()"
-      [pageSize]="tamanhoPagina"
-      [hidePageSize]="true"
-      (page)="mudarPagina($event)"
-      aria-label="Páginas de atendimentos"
+@if (modo() === 'lista') {
+  @if (erro(); as mensagem) {
+    <app-estado-erro [mensagem]="mensagem" />
+  }
+
+  @if (carregando()) {
+    <app-carregando rotulo="Carregando atendimentos" />
+  } @else if (itens().length === 0) {
+    <app-estado-vazio
+      titulo="Nenhum atendimento"
+      descricao="A presença e a falta desta criança aparecem aqui depois de um registro."
     />
-  </footer>
+  } @else {
+    <ul class="lista">
+      @for (item of itens(); track item.id) {
+        <li>
+          <div class="linha">
+            <span>{{ diaLegivel(item.dia) }}</span>
+            <span
+              class="situacao"
+              [class.presente]="item.situacao === 'presente'"
+              [class.falta]="item.situacao === 'falta'"
+            >{{ rotuloSituacao(item.situacao) }}</span>
+          </div>
+          @if (item.anotacao) {
+            <p>{{ item.anotacao }}</p>
+          }
+          <div class="acoes">
+            <button mat-stroked-button type="button" (click)="editar(item)">Editar</button>
+            <button mat-button type="button" (click)="excluir(item)">Excluir</button>
+          </div>
+        </li>
+      }
+    </ul>
+    <footer class="paginacao">
+      <p class="resumo">{{ resumoPagina() }}</p>
+      <mat-paginator
+        [length]="total()"
+        [pageIndex]="pagina()"
+        [pageSize]="tamanhoPagina"
+        [hidePageSize]="true"
+        (page)="mudarPagina($event)"
+        aria-label="Páginas de atendimentos"
+      />
+    </footer>
+  }
+} @else {
+  <label class="mes">
+    Mês
+    <select [value]="mes()" (change)="trocarMes($event)">
+      @for (opcao of meses(); track opcao) {
+        <option [value]="opcao">{{ rotuloMes(opcao) }}</option>
+      }
+    </select>
+  </label>
+
+  @if (erroMes(); as mensagem) {
+    <app-estado-erro [mensagem]="mensagem" />
+  }
+
+  @if (carregandoMes()) {
+    <app-carregando rotulo="Carregando o calendário" />
+  } @else {
+    @if (mesSemRegistro()) {
+      <p class="nota">Nenhum registro em {{ rotuloMes(mes()) }}.</p>
+    }
+    <div class="calendario">
+      <div class="semana" aria-hidden="true">
+        @for (nome of diasSemana; track nome) {
+          <span>{{ nome }}</span>
+        }
+      </div>
+      <div class="grade">
+        @for (dia of grade(); track dia.iso) {
+          @let registro = registroNoDia(dia.iso);
+          <div
+            class="celula"
+            [class.fora]="dia.fora"
+            [class.presente]="registro?.situacao === 'presente'"
+            [class.falta]="registro?.situacao === 'falta'"
+            [attr.tabindex]="registro ? 0 : null"
+            (mouseenter)="registro && mostrarCartao($event, dia.iso)"
+            (mouseleave)="esconderCartao($event)"
+            (focusin)="registro && mostrarCartao($event, dia.iso)"
+            (focusout)="esconderCartao($event)"
+          >
+            <span class="numero">{{ dia.numero }}</span>
+            @if (registro) {
+              <div
+                class="cartao"
+                [class.aberto]="diaAberto() === dia.iso"
+                [style.top.px]="posicaoCartao()?.top"
+                [style.left.px]="posicaoCartao()?.left"
+                (mouseenter)="manterCartao()"
+              >
+                <p>{{ registro.anotacao || 'Sem anotação.' }}</p>
+                <div class="icones">
+                  <button type="button" aria-label="Editar registro" (click)="editar(registro)">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M4 20h4l10-10-4-4L4 16z" />
+                      <path d="M13 7l4 4" />
+                    </svg>
+                  </button>
+                  <button type="button" aria-label="Excluir registro" (click)="excluir(registro)">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M4 7h16" />
+                      <path d="M9 7V5h6v2" />
+                      <path d="M8 7l1 12h6l1-12" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  }
 }
